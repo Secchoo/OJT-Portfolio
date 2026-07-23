@@ -1,200 +1,199 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Justin Cholo P. Adlawan — OJT Logbook</title>
+<title>OSS Internship Log — Justin Cholo P. Adlawan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Nunito:wght@400;600;700;800&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<!-- ============ TOP NAV ============ -->
-<header class="topnav">
-  <div class="topnav-inner">
-    <span class="brand">🌰 the ojt journal</span>
-    <nav class="nav-links">
-      <a href="#home">Home</a>
-      <a href="#documents">Documents</a>
-      <a href="#progress">Progress</a>
-      <a href="#log">Weekly Log</a>
-    </nav>
-    <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
-  </div>
-  <nav class="nav-links-mobile" id="mobileNav">
-    <a href="#home">Home</a>
-    <a href="#documents">Documents</a>
-    <a href="#progress">Progress</a>
-    <a href="#log">Weekly Log</a>
-  </nav>
-</header>
-
-<!-- ============ HERO ============ -->
-<section class="hero" id="home">
-  <div class="hero-texture"></div>
-  <div class="hero-content">
-    <p class="eyebrow">On-the-Job Training Logbook</p>
-    <h1 class="hero-name">Justin Cholo P. Adlawan</h1>
-    <p class="hero-sub">BSCPE2-6 &nbsp;·&nbsp; Polytechnic University of the Philippines</p>
-    <p class="hero-tagline">A cozy little corner of the internet where every week of my internship gets a page — the tasks, the small wins, and the photos to prove I was there.</p>
-    <div class="hero-buttons">
-      <a href="#log" class="btn btn-primary">Go to Weekly Log</a>
-      <a href="#documents" class="btn btn-ghost">View Documents</a>
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-mark">JA</div>
+    <div>
+      <div class="brand-text">OJT Internship Log</div>
+      <div class="brand-sub">Private record · edits require your PIN</div>
     </div>
   </div>
-</section>
-
-<!-- ============ DOCUMENTS ============ -->
-<section class="documents" id="documents">
-  <div class="section-inner">
-    <p class="eyebrow">Filed &amp; Signed</p>
-    <h2 class="section-title">Requirements Corkboard</h2>
-    <p class="section-lede">Every paper that made this internship official, pinned up in one place. Tap a tab to read it.</p>
-
-    <div class="corkboard">
-      <button class="file-tab" data-doc="moa">
-        <span class="pin"></span>
-        <span class="tab-icon">📄</span>
-        <span class="tab-label">Memorandum of<br>Agreement</span>
-      </button>
-      <button class="file-tab" data-doc="loi">
-        <span class="pin"></span>
-        <span class="tab-icon">✉️</span>
-        <span class="tab-label">Letter of<br>Intent</span>
-      </button>
-      <button class="file-tab" data-doc="loe">
-        <span class="pin"></span>
-        <span class="tab-icon">📝</span>
-        <span class="tab-label">Letter of<br>Endorsement</span>
-      </button>
-      <button class="file-tab" data-doc="waiver">
-        <span class="pin"></span>
-        <span class="tab-icon">🖋️</span>
-        <span class="tab-label">Student<br>Waiver</span>
-      </button>
-      <button class="file-tab" data-doc="consent">
-        <span class="pin"></span>
-        <span class="tab-icon">✅</span>
-        <span class="tab-label">Consent<br>Form</span>
-      </button>
-      <button class="file-tab" data-doc="agreement">
-        <span class="pin"></span>
-        <span class="tab-icon">🤝</span>
-        <span class="tab-label">Internship<br>Agreement</span>
-      </button>
-    </div>
-  </div>
-</section>
-
-<!-- ============ PROGRESS ============ -->
-<section class="progress-section" id="progress">
-  <div class="section-inner progress-grid">
-    <div class="progress-copy">
-      <p class="eyebrow">The Big Picture</p>
-      <h2 class="section-title">300 Hours, One Cup at a Time</h2>
-      <p class="section-lede">Required hours: <strong>300</strong>. At a standard 40-hour training week, that comes out to <strong>7.5 weeks</strong> of OJT. Update your logged hours below and watch the mug fill up.</p>
-
-      <div class="hours-input-row">
-        <label for="hoursLogged">Hours logged so far</label>
-        <input type="number" id="hoursLogged" min="0" max="300" step="1" value="0">
-        <span class="hours-of">/ 300 hrs</span>
-      </div>
-
-      <div class="stat-row">
-        <div class="stat-card">
-          <span class="stat-value" id="weeksDone">0</span>
-          <span class="stat-label">weeks completed</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-value" id="weeksLeft">7.5</span>
-          <span class="stat-label">weeks remaining</span>
-        </div>
-        <div class="stat-card">
-          <span class="stat-value" id="percentDone">0%</span>
-          <span class="stat-label">of 300 hrs</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="mug-wrap">
-      <svg viewBox="0 0 220 260" class="mug-svg" aria-hidden="true">
-        <defs>
-          <clipPath id="mugClip">
-            <path d="M40 40 h110 v140 a55 55 0 0 1 -55 55 h0 a55 55 0 0 1 -55 -55 Z"/>
-          </clipPath>
-          <linearGradient id="coffeeGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#a9723f"/>
-            <stop offset="100%" stop-color="#5c3826"/>
-          </linearGradient>
-        </defs>
-        <path class="mug-handle" d="M150 90 q45 0 45 45 q0 45 -45 45" fill="none" stroke="#4a3728" stroke-width="10"/>
-        <rect x="0" y="0" width="220" height="260" fill="transparent"/>
-        <g clip-path="url(#mugClip)">
-          <rect id="coffeeFill" x="30" y="220" width="140" height="0" fill="url(#coffeeGrad)"/>
-        </g>
-        <path d="M40 40 h110 v140 a55 55 0 0 1 -55 55 h0 a55 55 0 0 1 -55 -55 Z" fill="none" stroke="#4a3728" stroke-width="6"/>
-        <ellipse cx="95" cy="40" rx="55" ry="10" fill="none" stroke="#4a3728" stroke-width="6"/>
-        <g class="steam">
-          <path d="M75 25 q-8 -12 0 -22 q8 -10 0 -20" fill="none" stroke="#c9a37f" stroke-width="4" stroke-linecap="round"/>
-          <path d="M100 25 q-8 -12 0 -22 q8 -10 0 -20" fill="none" stroke="#c9a37f" stroke-width="4" stroke-linecap="round"/>
-          <path d="M125 25 q-8 -12 0 -22 q8 -10 0 -20" fill="none" stroke="#c9a37f" stroke-width="4" stroke-linecap="round"/>
-        </g>
-      </svg>
-    </div>
-  </div>
-</section>
-
-<!-- ============ WEEKLY LOG ============ -->
-<section class="log-section" id="log">
-  <div class="section-inner">
-    <p class="eyebrow">Week by Week</p>
-    <h2 class="section-title">Weekly Progress Log</h2>
-    <p class="section-lede">Add an entry every week — what you worked on, and a photo or two to remember it by.</p>
-
-    <form id="logForm" class="log-form">
-      <div class="form-row">
-        <div class="form-field">
-          <label for="weekNumber">Week #</label>
-          <input type="number" id="weekNumber" min="1" max="20" required>
-        </div>
-        <div class="form-field">
-          <label for="dateRange">Date range</label>
-          <input type="text" id="dateRange" placeholder="e.g. July 6 – July 10, 2026" required>
-        </div>
-      </div>
-      <div class="form-field">
-        <label for="activities">Activities / tasks for this week</label>
-        <textarea id="activities" rows="4" placeholder="One activity per line works great — it'll show up as a neat little list." required></textarea>
-      </div>
-      <div class="form-field">
-        <label for="photoInput">Photos</label>
-        <input type="file" id="photoInput" accept="image/*" multiple>
-        <p class="field-hint">Photos are stored right in this browser — no upload needed.</p>
-      </div>
-      <button type="submit" class="btn btn-primary">Save this week</button>
-    </form>
-
-    <div class="log-entries" id="logEntries">
-      <!-- entries render here -->
-      <p class="empty-state" id="emptyState">No entries yet — your first week is a blank page waiting to be filled in. 📓</p>
-    </div>
-  </div>
-</section>
-
-<footer class="site-footer">
-  <p>Made with ☕ and a little bit of Fraunces &amp; Nunito — Justin Cholo P. Adlawan, BSCPE2-6, PUP.</p>
-</footer>
-
-<!-- ============ DOCUMENT MODAL ============ -->
-<div class="modal-overlay" id="docModal">
-  <div class="modal-box">
-    <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
-    <h3 id="modalTitle">Document</h3>
-    <div id="modalBody" class="modal-body"></div>
+  <div class="topbar-controls">
+    <button class="icon-btn" id="themeToggle" title="Toggle theme">🌙</button>
+    <button class="icon-btn lock-btn" id="editToggle" title="Unlock editing">🔒 View only</button>
   </div>
 </div>
+
+<main>
+
+  <!-- 1. PROFILE -->
+  <section class="section" id="profile-section">
+    <div class="badge">
+      <div class="badge-photo" id="avatarBox">
+        <span class="initials" id="avatarInitials">JA</span>
+        <img id="avatarImg" style="display:none;" alt="Profile photo">
+        <button class="photo-upload-btn eo-flex" id="avatarUploadBtn" title="Change photo">✎</button>
+        <input type="file" accept="image/*" id="avatarInput" style="display:none;">
+      </div>
+      <div class="badge-info">
+        <div class="eyebrow">Intern Badge</div>
+        <input class="field-input badge-name" id="fieldName" value="Justin Cholo P. Adlawan" disabled>
+        <div>
+          <input class="field-input" id="fieldRole" value="OSS Intern" disabled
+            style="display:inline-block;width:auto;font-family:'IBM Plex Mono';font-size:12px;font-weight:600;">
+        </div>
+        <div class="ledger" style="margin-top:14px;">
+          <div class="ledger-item">
+            <div class="ledger-label">School</div>
+            <input class="field-input ledger-value" id="fieldSchool" value="Polytechnic University of The Philippines" disabled>
+          </div>
+          <div class="ledger-item">
+            <div class="ledger-label">Company</div>
+            <input class="field-input ledger-value" id="fieldCompany" value="KMC Solutions Inc." disabled>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. COMPANY PROFILE (placed right below section 1, per request) -->
+  <section class="section" id="company-section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Host Company</div>
+        <h2 class="section-title">Company Profile</h2>
+      </div>
+    </div>
+    <div class="company-head">
+      <div>
+        <div class="logo-box" id="logoBox">
+          <span class="logo-placeholder" id="logoPlaceholder">Company<br>Logo</span>
+          <img id="logoImg" style="display:none;" alt="KMC Solutions logo">
+        </div>
+        <button class="logo-upload-btn eo" id="logoUploadBtn">Upload logo</button>
+        <input type="file" accept="image/*" id="logoInput" style="display:none;">
+      </div>
+      <div>
+        <div class="company-name">KMC Solutions Inc.</div>
+        <p class="company-desc">KMC Solutions helps companies build long-term offshore teams and operations in the Philippines and Colombia. It supports American, Australian, and European businesses by handling compliant employment, infrastructure, and people operations, without the need to set up a local entity. The platform brings together two integrated offerings: <strong>KMC TEAMS</strong>, which enables companies to hire and retain dedicated offshore professionals while maintaining full ownership of team direction, culture, and performance, and <strong>KMC SPACES</strong>, which provides these teams with beautiful, fully serviced, design-led offices across 36 sites in Metro Manila, Cebu, Clark, Bogotá, and Medellín. Through the KMC Partner Program, the company works with advisors and firms supporting international expansion by offering a trusted platform for offshore teams and workspace solutions.</p>
+        <div class="trust-row">
+          <span class="trust-pill">Trusted by Zoom</span>
+          <span class="trust-pill">Okta</span>
+          <span class="trust-pill">Airbnb</span>
+          <span class="trust-pill">eBay</span>
+        </div>
+      </div>
+    </div>
+    <div class="route-strip">
+      <span class="city">Metro Manila</span><span class="city">Cebu</span><span class="city">Clark</span><span class="city">Bogotá</span><span class="city">Medellín</span>
+    </div>
+  </section>
+
+  <!-- 2. DOCUMENTS -->
+  <section class="section" id="documents-section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Requirements</div>
+        <h2 class="section-title">OJT Documents</h2>
+      </div>
+    </div>
+    <div class="doc-grid" id="docGrid"></div>
+  </section>
+
+  <!-- 3. PROGRESS -->
+  <section class="section" id="progress-section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Hours Tracker</div>
+        <h2 class="section-title">OJT Progress</h2>
+      </div>
+    </div>
+    <div class="progress-top">
+      <div class="progress-pct" id="progressPct">0%</div>
+      <div class="pstat">
+        <div class="pstat-label">Hours logged</div>
+        <div class="pstat-value">
+          <input type="number" min="0" class="field-input hours-input" id="hoursCompleted" value="0" disabled>
+          <span class="mono">/</span>
+          <input type="number" min="1" class="field-input hours-input" id="hoursTarget" value="300" disabled>
+        </div>
+      </div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%;"></div></div>
+    <div class="progress-stats">
+      <div class="pstat"><div class="pstat-label">Completed</div><div class="pstat-value" id="statCompleted">0 hrs</div></div>
+      <div class="pstat"><div class="pstat-label">Remaining</div><div class="pstat-value" id="statRemaining">300 hrs</div></div>
+      <div class="pstat"><div class="pstat-label">Target</div><div class="pstat-value" id="statTarget">300 hrs</div></div>
+    </div>
+  </section>
+
+  <!-- 4. WEEKLY LOGS -->
+  <section class="section" id="weekly-section">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Field Notes</div>
+        <h2 class="section-title">Weekly Logs</h2>
+      </div>
+      <button class="btn primary eo" id="addWeekBtn">+ Add week</button>
+    </div>
+
+    <div class="week-form" id="weekForm">
+      <input type="hidden" id="weekEditId">
+      <div class="form-row">
+        <div>
+          <label>Week number</label>
+          <input type="number" id="weekNumber" min="1">
+        </div>
+        <div>
+          <label>Date range</label>
+          <input type="text" id="weekDates" placeholder="e.g. Jul 20 – Jul 24, 2026">
+        </div>
+      </div>
+      <div>
+        <label>Tasks completed</label>
+        <textarea id="weekTasks" placeholder="Describe what you worked on this week..."></textarea>
+      </div>
+      <div>
+        <label>Photos</label>
+        <input type="file" id="weekImages" accept="image/*" multiple>
+      </div>
+      <div class="modal-actions" style="margin-top:0;">
+        <button class="btn" id="weekCancelBtn">Cancel</button>
+        <button class="btn primary" id="weekSaveBtn">Save week</button>
+      </div>
+      <div class="modal-error" id="weekFormError"></div>
+    </div>
+
+    <div class="week-list" id="weekList"></div>
+    <div class="empty-state" id="weekEmpty">No weeks logged yet. Unlock editing and add your first week to start your OJT record.</div>
+  </section>
+
+</main>
+
+<footer>OJT Internship Log · Justin Cholo P. Adlawan · KMC Solutions Inc.</footer>
+
+<!-- PIN modal -->
+<div class="modal-overlay hidden" id="pinModal">
+  <div class="modal-box">
+    <h3 id="pinTitle">Unlock editing</h3>
+    <p id="pinSubtitle">Enter your PIN to edit this page.</p>
+    <input type="password" id="pinInput" inputmode="numeric" placeholder="••••" maxlength="12">
+    <input type="password" id="pinConfirmInput" placeholder="Confirm PIN" maxlength="12" style="margin-top:10px; display:none;">
+    <div class="modal-error" id="pinError"></div>
+    <div class="modal-actions">
+      <button class="btn" id="pinCancelBtn">Cancel</button>
+      <button class="btn primary" id="pinSubmitBtn">Unlock</button>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="modal-overlay hidden" id="lightbox" style="background:rgba(0,0,0,.85);">
+  <button class="close-x" id="lightboxClose">✕</button>
+  <img id="lightboxImg" alt="Preview">
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script src="script.js"></script>
 </body>
