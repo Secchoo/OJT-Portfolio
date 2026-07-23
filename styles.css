@@ -114,8 +114,8 @@
     background:var(--accent-2-soft); color:var(--accent-2); font-family:'IBM Plex Mono';
     font-size:12px; font-weight:600; letter-spacing:.03em;
   }
-  .ledger{ display:flex; gap:28px; flex-wrap:wrap; }
-  .ledger-item{ min-width:150px; }
+  .ledger{ display:flex; flex-direction:column; gap:12px; }
+  .ledger-item{ width:100%; }
   .ledger-label{ font-family:'IBM Plex Mono'; font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--text-dim); margin-bottom:3px; }
   .ledger-value{ font-size:14.5px; font-weight:500; }
 
