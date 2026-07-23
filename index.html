@@ -54,7 +54,7 @@
     </div>
   </section>
 
-  <!-- 5. COMPANY PROFILE (placed right below section 1, per request) -->
+  <!-- 2. COMPANY PROFILE  -->
   <section class="section" id="company-section">
     <div class="section-head">
       <div>
@@ -87,7 +87,7 @@
     </div>
   </section>
 
-  <!-- 2. DOCUMENTS -->
+  <!-- 3. DOCUMENTS -->
   <section class="section" id="documents-section">
     <div class="section-head">
       <div>
@@ -98,7 +98,7 @@
     <div class="doc-grid" id="docGrid"></div>
   </section>
 
-  <!-- 3. PROGRESS -->
+  <!-- 4. PROGRESS -->
   <section class="section" id="progress-section">
     <div class="section-head">
       <div>
@@ -108,13 +108,6 @@
     </div>
     <div class="progress-top">
       <div class="progress-pct" id="progressPct">0%</div>
-      <div class="pstat">
-        <div class="pstat-label">Hours logged</div>
-        <div class="pstat-value">
-          <input type="number" min="0" class="field-input hours-input" id="hoursCompleted" value="0" disabled>
-          <span class="mono">/</span>
-          <input type="number" min="1" class="field-input hours-input" id="hoursTarget" value="300" disabled>
-        </div>
       </div>
     </div>
     <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%;"></div></div>
@@ -125,7 +118,7 @@
     </div>
   </section>
 
-  <!-- 4. WEEKLY LOGS -->
+  <!-- 5. WEEKLY LOGS -->
   <section class="section" id="weekly-section">
     <div class="section-head">
       <div>
@@ -169,21 +162,6 @@
 </main>
 
 <footer>OJT Internship Log · Justin Cholo P. Adlawan · KMC Solutions Inc.</footer>
-
-<!-- PIN modal -->
-<div class="modal-overlay hidden" id="pinModal">
-  <div class="modal-box">
-    <h3 id="pinTitle">Unlock editing</h3>
-    <p id="pinSubtitle">Enter your PIN to edit this page.</p>
-    <input type="password" id="pinInput" inputmode="numeric" placeholder="••••" maxlength="12">
-    <input type="password" id="pinConfirmInput" placeholder="Confirm PIN" maxlength="12" style="margin-top:10px; display:none;">
-    <div class="modal-error" id="pinError"></div>
-    <div class="modal-actions">
-      <button class="btn" id="pinCancelBtn">Cancel</button>
-      <button class="btn primary" id="pinSubmitBtn">Unlock</button>
-    </div>
-  </div>
-</div>
 
 <!-- Lightbox -->
 <div class="modal-overlay hidden" id="lightbox" style="background:rgba(0,0,0,.85);">
