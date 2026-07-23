@@ -1,7 +1,7 @@
 (function(){
   "use strict";
 
-  /* ---------------- storage wrapper ----------------
+  /* ---------------- storage wrapper ----------------*/
   const Store = {
     async get(key){
       try{ return window.localStorage.getItem(key); }
