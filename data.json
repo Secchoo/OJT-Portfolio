@@ -1,0 +1,14 @@
+{
+  "progress": {
+    "completedHours": 0,
+    "targetHours": 300
+  },
+  "weeklyLogs": [
+    {
+      "week": 1,
+      "dates": "Jul 20 - Jul 24, 2026",
+      "tasks": "Example entry — replace this with what you actually worked on this week.",
+      "images": []
+    }
+  ]
+}
