@@ -2,9 +2,6 @@
   "use strict";
 
   /* ---------------- storage wrapper ----------------
-     Uses the browser's own localStorage, so this works when the site
-     is opened normally (double-clicked or hosted) — not just inside
-     a Claude artifact preview. Data is saved per browser/device. */
   const Store = {
     async get(key){
       try{ return window.localStorage.getItem(key); }
