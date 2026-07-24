@@ -6,9 +6,12 @@
   "weeklyLogs": [
     {
       "week": 1,
-      "dates": "Jul 20 - Jul 24, 2026",
-      "tasks": "**Monday** \n -Company introduction and tour around the office \n -Familiarized the OSP ticketing system \n -Assisted in checking asset inventory in workspace A \n",
+      "log": [
+      {"dates": "Jul 20 - Jul 24, 2026"},
+      {"tasks": "Monday", "bold": true},
+      {"tasks": "-Company introduction and tour around the office \n -Familiarized the OSP ticketing system \n -Assisted in checking asset inventory in workspace A \n -Joined company droup chats to stay updated"},
       "images": []
+      ]
     },
     {
   "week": 2,
