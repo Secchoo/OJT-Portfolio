@@ -7,8 +7,20 @@
     {
       "week": 1,
       "dates": "Jul 20 - Jul 24, 2026",
-      "tasks": "Example entry — replace this with what you actually worked on this week.",
+      "tasks": "Monday \n -Company introduction and tour around the office \n -Assisted in checking asset inventory in workspace A",
       "images": []
     }
+    {
+  "week": 2,
+  "dates": "Jul 27 - Jul 31, 2026",
+  "tasks": "What you worked on this week. Line breaks are fine.",
+  "images": []
+    }
+    {
+  "week": 3,
+  "dates": "Aug 3 - Aug 7, 2026",
+  "tasks": "What you worked on this week. Line breaks are fine.",
+  "images": []
+   }
   ]
 }
