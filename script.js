@@ -127,6 +127,7 @@
             <div class="week-dates">${escapeHTML(w.dates||"")}</div>
           </div>
           <div class="week-tasks">${escapeHTML(w.tasks||"")}</div>
+          ${w.takeaways ? `<div class="week-takeaways"><div class="week-subhead">Takeaways</div>${escapeHTML(w.takeaways)}</div>` : ""}
           ${imgs ? `<div class="week-images">${imgs}</div>` : ""}
         </div>`;
     }).join("");
