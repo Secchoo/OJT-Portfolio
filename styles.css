@@ -207,6 +207,14 @@
   .week-dates{ color:var(--text-dim); font-size:12.5px; margin-left:auto; font-family:'IBM Plex Mono'; }
   .week-title-row{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
   .week-tasks{ font-size:14px; color:var(--text); margin:8px 0 12px; white-space:pre-wrap; }
+  .week-takeaways{
+    font-size:13.5px; color:var(--text); white-space:pre-wrap; margin:0 0 12px;
+    padding:10px 14px; border-left:2px solid var(--accent-2); background:var(--accent-2-soft); border-radius:0 8px 8px 0;
+  }
+  .week-subhead{
+    font-family:'IBM Plex Mono'; font-size:10px; text-transform:uppercase; letter-spacing:.1em;
+    color:var(--accent-2); font-weight:600; margin-bottom:4px;
+  }
   .week-images{ display:flex; gap:8px; flex-wrap:wrap; }
   .week-images img{ width:76px; height:76px; object-fit:cover; border-radius:8px; border:1px solid var(--border); cursor:pointer; }
   .week-actions{ display:flex; gap:8px; margin-top:12px; }
