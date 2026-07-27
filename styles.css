@@ -230,7 +230,7 @@
   .modal-actions{ display:flex; gap:10px; margin-top:16px; }
   .modal-actions .btn{ flex:1; justify-content:center; }
   .modal-error{ color:var(--danger); font-size:12px; margin-top:8px; min-height:14px; }
-  .modal-overlay img{ max-width:90vw; max-height:85vh; border-radius:10px; }
+  .modal-overlay img{ max-width:min(560px, 85vw); max-height:min(560px, 75vh); width:auto; height:auto; object-fit:contain; border-radius:10px; }
   .close-x{ position:absolute; top:16px; right:20px; color:#fff; font-size:22px; background:none; border:none; }
 
   .toast{
