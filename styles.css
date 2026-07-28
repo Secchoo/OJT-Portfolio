@@ -38,12 +38,6 @@
     padding:14px 28px; background:color-mix(in srgb, var(--bg) 88%, transparent);
     backdrop-filter:blur(10px); border-bottom:1px solid var(--border);
   }
-  .brand{ display:flex; align-items:center; gap:10px; }
-  .brand-mark{
-    width:30px; height:30px; border-radius:8px; background:var(--accent);
-    color:#fff; display:flex; align-items:center; justify-content:center;
-    font-family:'Space Grotesk'; font-weight:700; font-size:14px; flex-shrink:0;
-  }
   .brand-text{ font-family:'Space Grotesk'; font-weight:600; font-size:15px; }
   .brand-sub{ font-size:11px; color:var(--text-dim); font-family:'IBM Plex Mono'; }
   .topbar-controls{ display:flex; align-items:center; gap:8px; }
