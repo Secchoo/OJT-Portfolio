@@ -85,11 +85,28 @@
           </div>
           <div class="doc-meta">${uploaded ? doc.file : "documents/" + doc.file.split("/")[1]}</div>
           <div class="doc-actions">
-            ${uploaded ? `<a class="btn small primary" href="${doc.file}" target="_blank" rel="noopener">View</a>` : ""}
+            ${uploaded ? `<button class="btn small primary" data-action="view-doc" data-file="${doc.file}" data-name="${doc.name}">View</button>` : ""}
           </div>
         </div>`;
     }).join("");
   }
+  $("docGrid").addEventListener("click", (e)=>{
+    const btn = e.target.closest("button[data-action='view-doc']");
+    if (!btn) return;
+    openDocModal(btn.dataset.file, btn.dataset.name);
+  });
+  function openDocModal(file, name){
+    $("docModalTitle").textContent = name;
+    $("docModalFrame").src = file;
+    $("docModalOpenNew").href = file;
+    $("docModal").classList.remove("hidden");
+  }
+  function closeDocModal(){
+    $("docModal").classList.add("hidden");
+    $("docModalFrame").src = "about:blank";
+  }
+  $("docModalClose").addEventListener("click", closeDocModal);
+  $("docModal").addEventListener("click", (e)=>{ if (e.target.id === "docModal") closeDocModal(); });
 
   /* ---------------- data.json: progress + weekly logs ---------------- */
   function renderProgress(completed, target){
