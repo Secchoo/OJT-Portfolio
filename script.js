@@ -143,7 +143,7 @@
             <div class="week-tab"><span class="dot"></span>WEEK ${String(w.week||0).padStart(2,"0")}</div>
             <div class="week-dates">${escapeHTML(w.dates||"")}</div>
           </div>
-          <div class="week-tasks">${escapeHTML(w.tasks||"")}</div>
+          ${w.tasks ? '<div class="week-tasks"><div class="week-subhead">Tasks</div>${escapeHTML(w.tasks)}</div>' : ""}
           ${w.takeaways ? `<div class="week-takeaways"><div class="week-subhead">Takeaways</div>${escapeHTML(w.takeaways)}</div>` : ""}
           ${imgs ? `<div class="week-images">${imgs}</div>` : ""}
         </div>`;
