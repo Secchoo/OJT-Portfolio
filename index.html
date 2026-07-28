@@ -17,7 +17,6 @@
   </div>
 </div>
 
-
 <main>
 
   <!-- 1. PROFILE -->
@@ -144,10 +143,17 @@
         <label>Tasks completed</label>
         <textarea id="weekTasks" placeholder="Describe what you worked on this week..."></textarea>
       </div>
+      <div>
+        <label>Takeaways</label>
+        <textarea id="weekTakeaways" placeholder="Describe what you learned on this week..."></textarea>
+      </div>
+      <div>
         <label>Photos</label>
         <input type="file" id="weekImages" accept="image/*" multiple>
       </div>
       <div class="modal-actions" style="margin-top:0;">
+        <button class="btn" id="weekCancelBtn">Cancel</button>
+        <button class="btn primary" id="weekSaveBtn">Save week</button>
       </div>
       <div class="modal-error" id="weekFormError"></div>
     </div>
@@ -164,6 +170,20 @@
 <div class="modal-overlay hidden" id="lightbox" style="background:rgba(0,0,0,.85);">
   <button class="close-x" id="lightboxClose">✕</button>
   <img id="lightboxImg" alt="Preview">
+</div>
+
+<!-- Document viewer -->
+<div class="modal-overlay hidden" id="docModal">
+  <div class="doc-modal-box">
+    <div class="doc-modal-head">
+      <span id="docModalTitle">Document</span>
+      <div class="doc-modal-actions">
+        <a id="docModalOpenNew" class="btn small" href="#" target="_blank" rel="noopener">Open in new tab</a>
+        <button class="btn small" id="docModalClose">Close</button>
+      </div>
+    </div>
+    <iframe id="docModalFrame" title="Document preview"></iframe>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
