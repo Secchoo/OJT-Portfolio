@@ -65,22 +65,6 @@
   .section-head{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:22px; flex-wrap:wrap;}
   .section-title{ font-size:22px; margin-top:4px; }
 
-  /* ---------- edit-mode visibility ---------- */
-  .eo{ display:none; }
-  .eo-flex{ display:none; }
-  body.editing .eo{ display:inline-block; }
-  body.editing .eo-flex{ display:inline-flex; }
-  .field-input{
-    border:none; background:transparent; color:var(--text); padding:2px 0;
-    border-bottom:1px dashed transparent; width:100%;
-  }
-  body.editing .field-input:not(:disabled){
-    border-bottom:1px dashed var(--accent); background:var(--accent-soft);
-    border-radius:4px; padding:4px 8px;
-  }
-  .field-input:disabled{ cursor:default; opacity:1; }
-  textarea.field-input{ resize:vertical; font-family:inherit; }
-
   /* ---------- profile badge ---------- */
   .badge{
     display:flex; gap:24px; align-items:center; position:relative;
