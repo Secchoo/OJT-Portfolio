@@ -33,7 +33,7 @@
     encode(str){ return btoa(unescape(encodeURIComponent(str))); },
     decode(b64){ return decodeURIComponent(escape(atob(b64.replace(/\n/g, "")))); },
     async getFile(path){
-      const res = await fetch(`${this.apiBase()}/contents/${path}?ref=${encodeURIComponent(this.branch())}`, { headers: this.headers() });
+      const res = await fetch(`${this.apiBase()}/contents/${path}?ref=${encodeURIComponent(this.branch())}&_=${Date.now()}`, { headers: this.headers(), cache: "no-store" });
       if (res.status === 404) return null;
       if (!res.ok) throw new Error(`GitHub couldn't read ${path} (${res.status})`);
       return res.json();
@@ -328,12 +328,29 @@
   });
 
   async function commitDataJSON(mutatorFn, message){
-    const file = await GH.getFile("data.json");
-    let data = file ? JSON.parse(GH.decode(file.content)) : { progress:{ completedHours:0, targetHours:300 }, weeklyLogs:[] };
-    if (!data.progress) data.progress = { completedHours:0, targetHours:300 };
-    if (!Array.isArray(data.weeklyLogs)) data.weeklyLogs = [];
-    mutatorFn(data);
-    await GH.putFile("data.json", JSON.stringify(data, null, 2) + "\n", message, file ? file.sha : undefined);
+    async function attempt(){
+      const file = await GH.getFile("data.json");
+      let data = file ? JSON.parse(GH.decode(file.content)) : { progress:{ completedHours:0, targetHours:300 }, weeklyLogs:[] };
+      if (!data.progress) data.progress = { completedHours:0, targetHours:300 };
+      if (!Array.isArray(data.weeklyLogs)) data.weeklyLogs = [];
+      mutatorFn(data);
+      data.weeklyLogs.sort((a,b)=> (a.week||0) - (b.week||0));
+      await GH.putFile("data.json", JSON.stringify(data, null, 2) + "\n", message, file ? file.sha : undefined);
+      return data;
+    }
+    let data;
+    try{
+      data = await attempt();
+    }catch(err){
+      // A 409 means the sha we sent is stale (e.g. a previous edit landed a moment
+      // ago). Re-fetch the latest version and re-apply the same change once more
+      // before giving up.
+      if (String(err.message).includes("(409)")){
+        data = await attempt();
+      } else {
+        throw err;
+      }
+    }
     renderProgress(data.progress.completedHours, data.progress.targetHours);
     renderWeeklyLogs(data.weeklyLogs);
   }
