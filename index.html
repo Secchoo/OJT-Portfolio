@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OSS Internship Log — Justin Cholo P. Adlawan</title>
+<title>Internship Portfolio — Justin Cholo P. Adlawan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
@@ -11,8 +11,14 @@
 <body>
 
 <div class="topbar">
+  <div class="brand">
+    <div>
       <div class="brand-text">Internship Portfolio</div>
+    </div>
+  </div>
   <div class="topbar-controls">
+    <span class="gh-status" id="ghStatus">Not connected</span>
+    <button class="icon-btn" id="settingsBtn" title="GitHub connection">⚙️</button>
     <button class="icon-btn" id="themeToggle" title="Toggle theme">🌙</button>
   </div>
 </div>
@@ -25,6 +31,7 @@
       <div class="badge-photo" id="avatarBox">
         <span class="initials" id="avatarInitials">JA</span>
         <img id="avatarImg" style="display:none;" alt="Profile photo">
+        <button class="photo-upload-btn eo-flex" id="avatarUploadBtn" title="Change photo">✎</button>
         <input type="file" accept="image/*" id="avatarInput" style="display:none;">
       </div>
       <div class="badge-info">
@@ -44,10 +51,10 @@
             <input class="field-input ledger-value" id="fieldCompany" value="KMC Solutions Inc." disabled>
           </div>
         </div>
-      <div class="profile-links">
-          <a class="btn" href="https://github.com/Secchoo" target="_blank" rel="noopener">GitHub</a>
-          <a class="btn" href="https://ph.linkedin.com/in/cholo-adlawan-b83312335" target="_blank" rel="noopener">LinkedIn
-      </a>
+        <div class="profile-links">
+          <a class="btn small" href="https://github.com/your-username" target="_blank" rel="noopener">GitHub</a>
+          <a class="btn small" href="https://www.linkedin.com/in/your-username" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
       </div>
     </div>
   </section>
@@ -65,8 +72,10 @@
         <div class="logo-box" id="logoBox">
           <span class="logo-placeholder" id="logoPlaceholder">Company<br>Logo</span>
           <img id="logoImg" style="display:none;" alt="KMC Solutions logo">
+        </div>
+        <button class="logo-upload-btn eo" id="logoUploadBtn">Upload logo</button>
+        <input type="file" accept="image/*" id="logoInput" style="display:none;">
       </div>
-    </div>
       <div>
         <div class="company-name">KMC Solutions Inc.</div>
         <p class="company-desc">KMC Solutions helps companies build long-term offshore teams and operations in the Philippines and Colombia. It supports American, Australian, and European businesses by handling compliant employment, infrastructure, and people operations, without the need to set up a local entity. The platform brings together two integrated offerings: <strong>KMC TEAMS</strong>, which enables companies to hire and retain dedicated offshore professionals while maintaining full ownership of team direction, culture, and performance, and <strong>KMC SPACES</strong>, which provides these teams with beautiful, fully serviced, design-led offices across 36 sites in Metro Manila, Cebu, Clark, Bogotá, and Medellín. Through the KMC Partner Program, the company works with advisors and firms supporting international expansion by offering a trusted platform for offshore teams and workspace solutions.</p>
@@ -126,6 +135,7 @@
         <div class="eyebrow">Field Notes</div>
         <h2 class="section-title">Weekly Logs</h2>
       </div>
+      <button class="btn primary" id="addWeekBtn">+ Add week</button>
     </div>
 
     <div class="week-form" id="weekForm">
@@ -145,19 +155,27 @@
         <textarea id="weekTasks" placeholder="Describe what you worked on this week..."></textarea>
       </div>
       <div>
+        <label>Takeaways</label>
+        <textarea id="weekTakeaways" placeholder="Describe what you learned on this week..."></textarea>
+      </div>
+      <div>
         <label>Photos</label>
         <input type="file" id="weekImages" accept="image/*" multiple>
+      </div>
+      <div class="modal-actions" style="margin-top:0;">
+        <button class="btn" id="weekCancelBtn">Cancel</button>
+        <button class="btn primary" id="weekSaveBtn">Commit to GitHub</button>
       </div>
       <div class="modal-error" id="weekFormError"></div>
     </div>
 
     <div class="week-list" id="weekList"></div>
-    <div class="empty-state" id="weekEmpty">No weeks logged yet.</div>
+    <div class="empty-state" id="weekEmpty">No weeks logged yet. Connect GitHub (⚙️ above) and add your first week to start your OJT record.</div>
   </section>
 
 </main>
 
-<footer>Internship portfolio · Justin Cholo P. Adlawan · KMC Solutions Inc.</footer>
+<footer>OJT Internship Log · Justin Cholo P. Adlawan · KMC Solutions Inc.</footer>
 
 <!-- Lightbox -->
 <div class="modal-overlay hidden" id="lightbox" style="background:rgba(0,0,0,.85);">
@@ -176,6 +194,28 @@
       </div>
     </div>
     <iframe id="docModalFrame" title="Document preview"></iframe>
+  </div>
+</div>
+
+<!-- GitHub connection settings -->
+<div class="modal-overlay hidden" id="settingsModal">
+  <div class="modal-box wide">
+    <h3>Connect GitHub</h3>
+    <p>Lets this page commit weekly logs straight to <code>data.json</code> in your repo. The token is stored only in this browser and used only to call <code>api.github.com</code> directly from your device — it never goes anywhere else.</p>
+    <label class="settings-label">GitHub username / org</label>
+    <input type="text" id="ghOwner" placeholder="e.g. justin-adlawan">
+    <label class="settings-label">Repository name</label>
+    <input type="text" id="ghRepo" placeholder="e.g. ojt-portfolio">
+    <label class="settings-label">Branch</label>
+    <input type="text" id="ghBranch" placeholder="main" value="main">
+    <label class="settings-label">Personal access token</label>
+    <input type="password" id="ghToken" placeholder="fine-grained token, Contents: read & write">
+    <p class="settings-help">Create one at <span class="mono">github.com/settings/personal-access-tokens</span> — scope it to just this repository, with <strong>Contents: Read and write</strong> permission, nothing else. Treat it like a password; you can revoke it anytime on GitHub.</p>
+    <div class="modal-error" id="settingsError"></div>
+    <div class="modal-actions">
+      <button class="btn" id="settingsClearBtn">Disconnect</button>
+      <button class="btn primary" id="settingsSaveBtn">Save & connect</button>
+    </div>
   </div>
 </div>
 
