@@ -11,6 +11,116 @@
     toastTimer = setTimeout(()=> t.classList.remove("show"), 3200);
   }
 
+  /* ---------------- GitHub connection (commits data.json & photos for you) ---------------- */
+  const GH = {
+    key: "gh-config",
+    getConfig(){
+      try{ const raw = window.localStorage.getItem(this.key); return raw ? JSON.parse(raw) : null; }
+      catch(e){ return null; }
+    },
+    setConfig(cfg){ window.localStorage.setItem(this.key, JSON.stringify(cfg)); },
+    clearConfig(){ window.localStorage.removeItem(this.key); },
+    isConfigured(){
+      const c = this.getConfig();
+      return !!(c && c.owner && c.repo && c.token);
+    },
+    apiBase(){ const c = this.getConfig(); return `https://api.github.com/repos/${c.owner}/${c.repo}`; },
+    branch(){ const c = this.getConfig(); return (c && c.branch) || "main"; },
+    headers(){
+      const c = this.getConfig();
+      return { "Authorization": `Bearer ${c.token}`, "Accept": "application/vnd.github+json" };
+    },
+    encode(str){ return btoa(unescape(encodeURIComponent(str))); },
+    decode(b64){ return decodeURIComponent(escape(atob(b64.replace(/\n/g, "")))); },
+    async getFile(path){
+      const res = await fetch(`${this.apiBase()}/contents/${path}?ref=${encodeURIComponent(this.branch())}`, { headers: this.headers() });
+      if (res.status === 404) return null;
+      if (!res.ok) throw new Error(`GitHub couldn't read ${path} (${res.status})`);
+      return res.json();
+    },
+    async putFile(path, contentStr, message, sha){
+      const body = { message, content: this.encode(contentStr), branch: this.branch() };
+      if (sha) body.sha = sha;
+      const res = await fetch(`${this.apiBase()}/contents/${path}`, {
+        method: "PUT",
+        headers: { ...this.headers(), "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok){
+        const t = await res.text().catch(()=> "");
+        throw new Error(`GitHub couldn't save ${path} (${res.status}): ${t.slice(0,200)}`);
+      }
+      return res.json();
+    },
+    async putBase64File(path, base64Content, message){
+      const res = await fetch(`${this.apiBase()}/contents/${path}`, {
+        method: "PUT",
+        headers: { ...this.headers(), "Content-Type": "application/json" },
+        body: JSON.stringify({ message, content: base64Content, branch: this.branch() })
+      });
+      if (!res.ok){
+        const t = await res.text().catch(()=> "");
+        throw new Error(`GitHub couldn't save ${path} (${res.status}): ${t.slice(0,200)}`);
+      }
+      return res.json();
+    }
+  };
+
+  function updateGhStatus(){
+    const el = $("ghStatus");
+    const configured = GH.isConfigured();
+    if (configured){
+      const c = GH.getConfig();
+      el.textContent = `Connected · ${c.owner}/${c.repo}`;
+      el.classList.add("connected");
+    } else {
+      el.textContent = "Not connected";
+      el.classList.remove("connected");
+    }
+  }
+
+  $("settingsBtn").addEventListener("click", ()=>{
+    const c = GH.getConfig() || {};
+    $("ghOwner").value = c.owner || "";
+    $("ghRepo").value = c.repo || "";
+    $("ghBranch").value = c.branch || "main";
+    $("ghToken").value = c.token || "";
+    $("settingsError").textContent = "";
+    $("settingsModal").classList.remove("hidden");
+  });
+  $("settingsModal").addEventListener("click", (e)=>{ if (e.target.id === "settingsModal") $("settingsModal").classList.add("hidden"); });
+  $("settingsClearBtn").addEventListener("click", ()=>{
+    GH.clearConfig();
+    updateGhStatus();
+    renderWeeklyLogs(lastWeeklyLogs);
+    $("settingsModal").classList.add("hidden");
+    toast("Disconnected from GitHub.");
+  });
+  $("settingsSaveBtn").addEventListener("click", async ()=>{
+    const owner = $("ghOwner").value.trim();
+    const repo = $("ghRepo").value.trim();
+    const branch = $("ghBranch").value.trim() || "main";
+    const token = $("ghToken").value.trim();
+    if (!owner || !repo || !token){ $("settingsError").textContent = "Fill in owner, repo, and token."; return; }
+    $("settingsSaveBtn").disabled = true;
+    $("settingsSaveBtn").textContent = "Checking...";
+    GH.setConfig({ owner, repo, branch, token });
+    try{
+      await GH.getFile("data.json");
+      updateGhStatus();
+      renderWeeklyLogs(lastWeeklyLogs);
+      $("settingsModal").classList.add("hidden");
+      toast("Connected to GitHub.");
+    }catch(err){
+      $("settingsError").textContent = err.message || "Couldn't connect — check owner, repo, and token.";
+      GH.clearConfig();
+      updateGhStatus();
+    }finally{
+      $("settingsSaveBtn").disabled = false;
+      $("settingsSaveBtn").textContent = "Save & connect";
+    }
+  });
+
   const DOC_TYPES = [
     { id:"moa", name:"Memorandum of Agreement", file:"documents/moa.pdf" },
     { id:"loe", name:"Letter of Endorsement", file:"documents/loe.pdf" },
@@ -128,17 +238,21 @@
     return d.innerHTML;
   }
 
+  let lastWeeklyLogs = [];
+
   function renderWeeklyLogs(weeks){
-    const list = Array.isArray(weeks) ? weeks.slice() : [];
+    lastWeeklyLogs = Array.isArray(weeks) ? weeks : [];
+    const list = lastWeeklyLogs.slice();
     list.sort((a,b)=> (a.week||0) - (b.week||0));
     $("weekEmpty").style.display = list.length ? "none" : "block";
+    const canEdit = GH.isConfigured();
     $("weekList").innerHTML = list.map(w=>{
       const imgs = Array.isArray(w.images) ? w.images.map((name,i)=>{
         const src = "images/weekly/" + name;
         return `<img src="${src}" data-src="${src}" alt="Week ${w.week} photo ${i+1}" onerror="this.style.display='none'">`;
       }).join("") : "";
       return `
-        <div class="week-card">
+        <div class="week-card" data-week="${w.week}">
           <div class="week-title-row">
             <div class="week-tab"><span class="dot"></span>WEEK ${String(w.week||0).padStart(2,"0")}</div>
             <div class="week-dates">${escapeHTML(w.dates||"")}</div>
@@ -146,6 +260,10 @@
           <div class="week-tasks"><div class="week-subhead">Tasks</div>${escapeHTML(w.tasks||"")}</div>
           ${w.takeaways ? `<div class="week-takeaways"><div class="week-subhead">Takeaways</div>${escapeHTML(w.takeaways)}</div>` : ""}
           ${imgs ? `<div class="week-images">${imgs}</div>` : ""}
+          ${canEdit ? `<div class="week-actions">
+            <button class="btn small" data-action="edit-week" data-week="${w.week}">Edit</button>
+            <button class="btn small ghost-danger" data-action="delete-week" data-week="${w.week}">Delete</button>
+          </div>` : ""}
         </div>`;
     }).join("");
   }
@@ -166,6 +284,145 @@
     }
   }
 
+  /* ---------------- add / edit / delete week (commits to GitHub) ---------------- */
+  function nextWeekNumber(){
+    const nums = lastWeeklyLogs.map(w => w.week || 0);
+    return nums.length ? Math.max(...nums) + 1 : 1;
+  }
+  function openWeekForm(weekNumber){
+    if (!GH.isConfigured()){
+      toast("Connect GitHub first — tap ⚙️ in the top bar.");
+      $("settingsBtn").click();
+      return;
+    }
+    $("weekFormError").textContent = "";
+    $("weekImages").value = "";
+    if (weekNumber != null){
+      const w = lastWeeklyLogs.find(x => x.week === weekNumber);
+      $("weekEditId").value = weekNumber;
+      $("weekNumber").value = w ? w.week : weekNumber;
+      $("weekDates").value = w ? (w.dates || "") : "";
+      $("weekTasks").value = w ? (w.tasks || "") : "";
+      $("weekTakeaways").value = w ? (w.takeaways || "") : "";
+    } else {
+      $("weekEditId").value = "";
+      $("weekNumber").value = nextWeekNumber();
+      $("weekDates").value = "";
+      $("weekTasks").value = "";
+      $("weekTakeaways").value = "";
+    }
+    $("weekForm").classList.add("open");
+    $("weekForm").scrollIntoView({ behavior:"smooth", block:"center" });
+  }
+  $("addWeekBtn").addEventListener("click", ()=> openWeekForm(null));
+  $("weekCancelBtn").addEventListener("click", ()=> $("weekForm").classList.remove("open"));
+
+  $("weekList").addEventListener("click", (e)=>{
+    const btn = e.target.closest("button[data-action]");
+    if (!btn) return;
+    const weekNumber = parseInt(btn.dataset.week, 10);
+    if (btn.dataset.action === "edit-week") openWeekForm(weekNumber);
+    if (btn.dataset.action === "delete-week"){
+      if (confirm(`Delete week ${weekNumber}? This commits the removal to GitHub.`)) deleteWeek(weekNumber);
+    }
+  });
+
+  async function commitDataJSON(mutatorFn, message){
+    const file = await GH.getFile("data.json");
+    let data = file ? JSON.parse(GH.decode(file.content)) : { progress:{ completedHours:0, targetHours:300 }, weeklyLogs:[] };
+    if (!data.progress) data.progress = { completedHours:0, targetHours:300 };
+    if (!Array.isArray(data.weeklyLogs)) data.weeklyLogs = [];
+    mutatorFn(data);
+    await GH.putFile("data.json", JSON.stringify(data, null, 2) + "\n", message, file ? file.sha : undefined);
+    renderProgress(data.progress.completedHours, data.progress.targetHours);
+    renderWeeklyLogs(data.weeklyLogs);
+  }
+
+  function compressImage(file, maxDim, quality){
+    maxDim = maxDim || 1100; quality = quality || 0.72;
+    return new Promise((resolve, reject)=>{
+      const reader = new FileReader();
+      reader.onload = (e)=>{
+        const img = new Image();
+        img.onload = ()=>{
+          let w = img.width, h = img.height;
+          if (w > maxDim || h > maxDim){
+            if (w > h){ h = Math.round(h * maxDim / w); w = maxDim; }
+            else { w = Math.round(w * maxDim / h); h = maxDim; }
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = w; canvas.height = h;
+          canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL("image/jpeg", quality));
+        };
+        img.onerror = reject;
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  $("weekSaveBtn").addEventListener("click", async ()=>{
+    const weekNumber = parseInt($("weekNumber").value, 10);
+    const dates = $("weekDates").value.trim();
+    const tasks = $("weekTasks").value.trim();
+    const takeaways = $("weekTakeaways").value.trim();
+    const editRaw = $("weekEditId").value;
+    const originalNumber = editRaw === "" ? null : parseInt(editRaw, 10);
+    if (!weekNumber || weekNumber < 1){ $("weekFormError").textContent = "Enter a valid week number."; return; }
+    if (!tasks){ $("weekFormError").textContent = "Add a short description of your tasks."; return; }
+
+    $("weekSaveBtn").disabled = true;
+    $("weekFormError").textContent = "";
+    $("weekSaveBtn").textContent = "Uploading...";
+
+    try{
+      const existing = originalNumber != null ? lastWeeklyLogs.find(w => w.week === originalNumber) : null;
+      let images = (existing && Array.isArray(existing.images)) ? existing.images.slice() : [];
+
+      const files = Array.from($("weekImages").files || []).slice(0, 12);
+      for (let i = 0; i < files.length; i++){
+        const dataUrl = await compressImage(files[i], 1000, 0.7);
+        const base64 = dataUrl.split(",")[1];
+        const filename = `week${weekNumber}-${Date.now()}-${i}.jpg`;
+        await GH.putBase64File(`images/weekly/${filename}`, base64, `Add photo for week ${weekNumber}`);
+        images.push(filename);
+      }
+
+      $("weekSaveBtn").textContent = "Committing...";
+      const entry = { week: weekNumber, dates, tasks, takeaways, images };
+      await commitDataJSON((data)=>{
+        if (originalNumber != null){
+          data.weeklyLogs = data.weeklyLogs.filter(w => w.week !== originalNumber);
+        }
+        data.weeklyLogs = data.weeklyLogs.filter(w => w.week !== weekNumber);
+        data.weeklyLogs.push(entry);
+      }, originalNumber != null ? `Update week ${weekNumber}` : `Add week ${weekNumber}`);
+
+      $("weekForm").classList.remove("open");
+      toast(originalNumber != null ? "Week updated on GitHub." : "Week committed to GitHub.");
+    }catch(err){
+      console.error(err);
+      $("weekFormError").textContent = err.message || "Something went wrong committing to GitHub.";
+    }finally{
+      $("weekSaveBtn").disabled = false;
+      $("weekSaveBtn").textContent = "Commit to GitHub";
+    }
+  });
+
+  async function deleteWeek(weekNumber){
+    try{
+      await commitDataJSON((data)=>{
+        data.weeklyLogs = data.weeklyLogs.filter(w => w.week !== weekNumber);
+      }, `Delete week ${weekNumber}`);
+      toast("Week deleted on GitHub.");
+    }catch(err){
+      console.error(err);
+      toast("Couldn't delete — " + (err.message || "GitHub error."));
+    }
+  }
+
   /* ---------------- lightbox ---------------- */
   $("weekList") && document.addEventListener("click", (e)=>{
     const img = e.target.closest("img[data-src]");
@@ -179,6 +436,7 @@
   /* ---------------- boot ---------------- */
   (async function boot(){
     initTheme();
+    updateGhStatus();
     initAvatar();
     initLogo();
     await initDocuments();
