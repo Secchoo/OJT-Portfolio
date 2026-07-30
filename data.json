@@ -22,13 +22,6 @@
       ]
     },
     {
-      "week": 2,
-      "dates": "Jul 27 - Jul 31, 2026",
-      "tasks": "What you worked on this week. Line breaks are fine.",
-      "takeaways": " ",
-      "images": []
-    },
-    {
       "week": 3,
       "dates": "Aug 3 - Aug 7, 2026",
       "tasks": "What you worked on this week. Line breaks are fine.",
@@ -47,6 +40,13 @@
       "dates": "Aug 17 - Aug 21, 2026",
       "tasks": "N/A",
       "takeaways": "N/A",
+      "images": []
+    },
+    {
+      "week": 2,
+      "dates": "Jul 27 - Jul 31, 2026",
+      "tasks": "Hello",
+      "takeaways": "",
       "images": []
     }
   ]
