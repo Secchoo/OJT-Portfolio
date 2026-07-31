@@ -24,9 +24,21 @@
     {
       "week": 2,
       "dates": "Jul 27 - Jul 31, 2026",
-      "tasks": "Hello",
+      "tasks": "-Changed the hostname and joined each newly deployed system unit into one domain\n-Physical verification of assets in our IT storage\n-Returned all system unit set up to their designated desk in the Training Room\n-Reimaged 5 system units to make sure they all use the same image source of an operationg system using MDT (Microsoft Development Kit)\n- Checked if all system units in the IT storage are in one domain to get them ready for transfer to another site",
       "takeaways": "Hello",
-      "images": []
+      "images": [
+        "week2-1785475185102-0.jpg",
+        "week2-1785475187202-1.jpg",
+        "week2-1785475189349-2.jpg",
+        "week2-1785475191321-3.jpg",
+        "week2-1785475193288-4.jpg",
+        "week2-1785475195244-5.jpg",
+        "week2-1785475197159-6.jpg",
+        "week2-1785475199122-7.jpg",
+        "week2-1785475201382-8.jpg",
+        "week2-1785475202916-9.jpg",
+        "week2-1785475205184-10.jpg"
+      ]
     },
     {
       "week": 3,
