@@ -110,19 +110,16 @@
         <div class="eyebrow">Hours Tracker</div>
         <h2 class="section-title">OJT Progress</h2>
       </div>
-      <button class="btn" id="editHoursBtn">Edit hours</button>
     </div>
     <div class="progress-top">
       <div class="progress-pct" id="progressPct">0%</div>
       <div class="pstat-value">
           <input type="number" min="0" class="field-input hours-input" id="hoursCompleted" disabled>
-          <span class="mono">/</span>
+          <span class="mono"></span>
           <input type="number" min="1" class="field-input hours-input" id="hoursTarget" disabled>
-          <button class="btn small primary" id="hoursSaveBtn" style="display:none;">Commit</button>
-          <button class="btn small" id="hoursCancelBtn" style="display:none;">Cancel</button>
+        </div>
       </div>
     </div>
-    <div class="modal-error" id="hoursFormError"></div>
     <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%;"></div></div>
     <div class="progress-stats">
       <div class="pstat"><div class="pstat-label">Completed</div><div class="pstat-value" id="statCompleted">0 hrs</div></div>
