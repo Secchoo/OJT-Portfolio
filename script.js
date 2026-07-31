@@ -219,14 +219,17 @@
   $("docModal").addEventListener("click", (e)=>{ if (e.target.id === "docModal") closeDocModal(); });
 
   /* ---------------- data.json: progress + weekly logs ---------------- */
+  let lastProgress = { completedHours:0, targetHours:300 };
+
   function renderProgress(completed, target){
     completed = Math.max(0, Number(completed) || 0);
     target = Math.max(1, Number(target) || 1);
+    lastProgress = { completedHours: completed, targetHours: target };
     const pct = Math.min(100, Math.round((completed / target) * 100));
     $("progressPct").textContent = pct + "%";
     $("progressFill").style.width = pct + "%";
-    $("hoursCompleted").textContent = completed;
-    $("hoursTarget").textContent = target;
+    $("hoursCompleted").value = completed;
+    $("hoursTarget").value = target;
     $("statCompleted").textContent = completed + " hrs";
     $("statRemaining").textContent = Math.max(0, target - completed) + " hrs";
     $("statTarget").textContent = target + " hrs";
@@ -237,6 +240,52 @@
     d.textContent = str == null ? "" : String(str);
     return d.innerHTML;
   }
+
+  /* ---------------- edit hours (commits to GitHub) ---------------- */
+  function setHoursEditing(on){
+    $("hoursCompleted").disabled = !on;
+    $("hoursTarget").disabled = !on;
+    $("editHoursBtn").style.display = on ? "none" : "";
+    $("hoursSaveBtn").style.display = on ? "" : "none";
+    $("hoursCancelBtn").style.display = on ? "" : "none";
+    $("hoursFormError").textContent = "";
+  }
+  $("editHoursBtn").addEventListener("click", ()=>{
+    if (!GH.isConfigured()){
+      toast("Connect GitHub first — tap ⚙️ in the top bar.");
+      $("settingsBtn").click();
+      return;
+    }
+    setHoursEditing(true);
+    $("hoursCompleted").focus();
+  });
+  $("hoursCancelBtn").addEventListener("click", ()=>{
+    renderProgress(lastProgress.completedHours, lastProgress.targetHours);
+    setHoursEditing(false);
+  });
+  $("hoursSaveBtn").addEventListener("click", async ()=>{
+    const completed = parseInt($("hoursCompleted").value, 10);
+    const target = parseInt($("hoursTarget").value, 10);
+    if (isNaN(completed) || completed < 0){ $("hoursFormError").textContent = "Enter a valid number of completed hours."; return; }
+    if (isNaN(target) || target < 1){ $("hoursFormError").textContent = "Enter a valid target (at least 1 hour)."; return; }
+
+    $("hoursSaveBtn").disabled = true;
+    $("hoursSaveBtn").textContent = "Committing...";
+    try{
+      await commitDataJSON((data)=>{
+        data.progress.completedHours = completed;
+        data.progress.targetHours = target;
+      }, `Update hours to ${completed}/${target}`);
+      setHoursEditing(false);
+      toast("Hours updated on GitHub.");
+    }catch(err){
+      console.error(err);
+      $("hoursFormError").textContent = err.message || "Something went wrong committing to GitHub.";
+    }finally{
+      $("hoursSaveBtn").disabled = false;
+      $("hoursSaveBtn").textContent = "Commit";
+    }
+  });
 
   let lastWeeklyLogs = [];
 
