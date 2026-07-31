@@ -1,308 +1,463 @@
-:root{
-    --bg:#F1F4F3; --surface:#FFFFFF; --surface-2:#E7ECEB; --surface-3:#DCE3E1;
-    --text:#12202A; --text-dim:#4B5D66; --border:#D7DEDC;
-    --accent:#127A73; --accent-soft:#DCEEEC; --accent-2:#C97A2E; --accent-2-soft:#F5E4D2;
-    --danger:#B3432B; --danger-soft:#F6E2DC;
-    --shadow: 0 1px 2px rgba(18,32,42,.06), 0 8px 24px rgba(18,32,42,.06);
-    --radius: 14px;
-  }
-  html[data-theme="dark"]{
-    --bg:#0D1417; --surface:#131C21; --surface-2:#1B262C; --surface-3:#233039;
-    --text:#E8EEEC; --text-dim:#9BB0AC; --border:#253238;
-    --accent:#2BB3A3; --accent-soft:#122824; --accent-2:#E4A85E; --accent-2-soft:#2A2114;
-    --danger:#E2694F; --danger-soft:#2A1712;
-    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 28px rgba(0,0,0,.35);
-  }
-  *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    margin:0; background:var(--bg); color:var(--text);
-    font-family:'Inter',sans-serif; line-height:1.5;
-    transition:background .25s ease, color .25s ease;
-  }
-  h1,h2,h3{ font-family:'Space Grotesk',sans-serif; margin:0; letter-spacing:-.01em;}
-  .mono{ font-family:'IBM Plex Mono',monospace; }
-  .eyebrow{
-    font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:.14em;
-    text-transform:uppercase; color:var(--accent); font-weight:600;
-  }
-  a{color:inherit;}
-  button{ font-family:inherit; cursor:pointer; }
-  input, textarea{ font-family:inherit; color:var(--text); }
-  ::selection{ background:var(--accent-soft); }
+(function(){
+  "use strict";
 
-  /* ---------- topbar ---------- */
-  .topbar{
-    position:sticky; top:0; z-index:40;
-    display:flex; align-items:center; justify-content:space-between;
-    padding:14px 28px; background:color-mix(in srgb, var(--bg) 88%, transparent);
-    backdrop-filter:blur(10px); border-bottom:1px solid var(--border);
-  }
-  .brand{ display:flex; align-items:center; gap:10px; }
-  .brand-mark{
-    width:30px; height:30px; border-radius:8px; background:var(--accent);
-    color:#fff; display:flex; align-items:center; justify-content:center;
-    font-family:'Space Grotesk'; font-weight:700; font-size:14px; flex-shrink:0;
-  }
-  .brand-text{ font-family:'Space Grotesk'; font-weight:600; font-size:15px; }
-  .brand-sub{ font-size:11px; color:var(--text-dim); font-family:'IBM Plex Mono'; }
-  .topbar-controls{ display:flex; align-items:center; gap:8px; }
-.gh-status{
-  font-family:'IBM Plex Mono'; font-size:11px; color:var(--text-dim);
-  padding:0 4px; white-space:nowrap; display:none;
-}
-@media (min-width:520px){ .gh-status{ display:inline; } }
-.gh-status.connected{ color:var(--accent); }
-  .icon-btn{
-    display:flex; align-items:center; justify-content:center; gap:6px;
-    width:38px; height:38px; border-radius:10px; border:1px solid var(--border);
-    background:var(--surface); color:var(--text); transition:.15s;
-  }
-  .icon-btn:hover{ background:var(--surface-2); }
-  .lock-btn{
-    width:auto; padding:0 14px; font-size:13px; font-weight:600;
-    font-family:'IBM Plex Mono';
-  }
-  .lock-btn.unlocked{ background:var(--accent); border-color:var(--accent); color:#fff; }
-
-  /* ---------- layout ---------- */
-  main{ max-width:960px; margin:0 auto; padding:36px 20px 80px; }
-  .section{
-    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
-    padding:32px; margin-bottom:24px; box-shadow:var(--shadow);
-    animation:rise .5s ease both;
-  }
-  @keyframes rise{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
-  .section-head{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:22px; flex-wrap:wrap;}
-  .section-title{ font-size:22px; margin-top:4px; }
-
-  /* ---------- edit-mode visibility ---------- */
-  .eo{ display:none; }
-  .eo-flex{ display:none; }
-  body.editing .eo{ display:inline-block; }
-  body.editing .eo-flex{ display:inline-flex; }
-  .field-input{
-    border:none; background:transparent; color:var(--text); padding:2px 0;
-    border-bottom:1px dashed transparent; width:100%;
-    -webkit-appearance:none; appearance:none; -webkit-text-fill-color:var(--text);
-  }
-  .field-input:not(:disabled){
-    border-bottom:1px dashed var(--accent); background:var(--accent-soft);
-    border-radius:4px; padding:4px 8px;
-  }
-  .field-input:disabled{ cursor:default; opacity:1; }
-  textarea.field-input{ resize:vertical; font-family:inherit; }
-
-  /* ---------- profile badge ---------- */
-  .badge{
-    display:flex; gap:24px; align-items:center; position:relative;
-  }
-  .badge::before{
-    content:""; position:absolute; top:-32px; left:50%; transform:translateX(-50%);
-    width:52px; height:14px; border-radius:0 0 10px 10px; background:var(--surface-3);
-  }
-  .badge-photo{
-    position:relative; width:96px; height:96px; border-radius:50%; flex-shrink:0;
-    background:var(--surface-2); border:3px solid var(--accent-soft);
-    display:flex; align-items:center; justify-content:center; overflow:hidden;
-  }
-  .badge-photo img{ width:100%; height:100%; object-fit:cover; }
-  .badge-photo .initials{ font-family:'Space Grotesk'; font-size:32px; color:var(--accent); font-weight:700; }
-  .photo-upload-btn{
-    position:absolute; bottom:-2px; right:-2px; width:30px; height:30px; border-radius:50%;
-    background:var(--accent); color:#fff; border:2px solid var(--surface);
-    display:none; align-items:center; justify-content:center; font-size:14px;
-  }
-  body.editing .photo-upload-btn{ display:flex; }
-  .badge-info{ flex:1; min-width:0; }
-  .badge-name{ font-size:26px; font-weight:700; margin-bottom:8px; }
-  .badge-role-pill{
-    display:inline-block; margin-bottom:14px; padding:4px 12px; border-radius:100px;
-    background:var(--accent-2-soft); color:var(--accent-2); font-family:'IBM Plex Mono';
-    font-size:12px; font-weight:600; letter-spacing:.03em;
-  }
-  .ledger{ display:flex; flex-direction:column; gap:12px; }
-  .profile-links{ display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; }
-  .ledger-item{ width:100%; }
-  .ledger-label{ font-family:'IBM Plex Mono'; font-size:10.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--text-dim); margin-bottom:3px; }
-  .ledger-value{ font-size:14.5px; font-weight:500; }
-
-  /* ---------- company ---------- */
-  .company-head{ display:flex; gap:20px; align-items:flex-start; margin-bottom:18px; }
-  .logo-box{
-    width:72px; height:72px; border-radius:12px; background:var(--surface-2); border:1px dashed var(--border);
-    display:flex; align-items:center; justify-content:center; flex-shrink:0; position:relative; overflow:hidden;
-  }
-  .logo-box img{ width:100%; height:100%; object-fit:contain; padding:8px; }
-  .logo-box .logo-placeholder{ font-size:10px; color:var(--text-dim); text-align:center; font-family:'IBM Plex Mono'; padding:4px;}
-  .logo-upload-btn{
-    margin-top:8px; font-size:11.5px; font-family:'IBM Plex Mono'; color:var(--accent);
-    background:none; border:none; padding:0; text-decoration:underline;
-  }
-  .company-name{ font-size:20px; font-weight:700; margin-bottom:2px; }
-  .company-desc{ color:var(--text-dim); font-size:14.5px; line-height:1.7; }
-  .route-strip{
-    margin-top:22px; padding-top:16px; border-top:1px solid var(--border);
-    display:flex; flex-wrap:wrap; gap:0; align-items:center;
-    font-family:'IBM Plex Mono'; font-size:11.5px; letter-spacing:.06em; color:var(--text-dim);
-  }
-  .route-strip span.city::after{ content:"•"; margin:0 10px; color:var(--accent-2); }
-  .route-strip span.city:last-child::after{ content:""; margin:0; }
-  .trust-row{ margin-top:14px; display:flex; gap:10px; flex-wrap:wrap; }
-  .trust-pill{
-    font-family:'IBM Plex Mono'; font-size:10.5px; padding:3px 10px; border-radius:100px;
-    border:1px solid var(--border); color:var(--text-dim);
+  const $ = (id) => document.getElementById(id);
+  let toastTimer = null;
+  function toast(msg){
+    const t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=> t.classList.remove("show"), 3200);
   }
 
-  /* ---------- documents ---------- */
-  .doc-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
-  .doc-card{
-    border:1px solid var(--border); border-radius:12px; padding:16px; display:flex; flex-direction:column; gap:10px;
-    background:var(--surface); transition:.15s;
-  }
-  .doc-card:hover{ border-color:var(--accent); }
-  .doc-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
-  .doc-name{ font-weight:600; font-size:14.5px; }
-  .doc-status{
-    font-family:'IBM Plex Mono'; font-size:10px; padding:3px 8px; border-radius:100px; white-space:nowrap; flex-shrink:0;
-  }
-  .doc-status.on{ background:var(--accent-soft); color:var(--accent); }
-  .doc-status.off{ background:var(--surface-2); color:var(--text-dim); }
-  .doc-meta{ font-size:11.5px; color:var(--text-dim); font-family:'IBM Plex Mono'; }
-  .doc-actions{ display:flex; gap:8px; flex-wrap:wrap; margin-top:auto; }
-  .btn{
-    font-size:12.5px; font-weight:600; padding:7px 12px; border-radius:8px; border:1px solid var(--border);
-    background:var(--surface); color:var(--text); display:inline-flex; align-items:center; gap:6px;
-    text-decoration:none;
-  }
-  .btn:hover{ background:var(--surface-2); }
-  .btn.primary{ background:var(--accent); border-color:var(--accent); color:#fff; }
-  .btn.primary:hover{ opacity:.9; }
-  .btn.ghost-danger{ color:var(--danger); border-color:var(--danger-soft); }
-  .btn.ghost-danger:hover{ background:var(--danger-soft); }
-  .btn.small{ padding:5px 10px; font-size:11.5px; }
+  /* ---------------- GitHub connection (commits data.json & photos for you) ---------------- */
+  const GH = {
+    key: "gh-config",
+    getConfig(){
+      try{ const raw = window.localStorage.getItem(this.key); return raw ? JSON.parse(raw) : null; }
+      catch(e){ return null; }
+    },
+    setConfig(cfg){ window.localStorage.setItem(this.key, JSON.stringify(cfg)); },
+    clearConfig(){ window.localStorage.removeItem(this.key); },
+    isConfigured(){
+      const c = this.getConfig();
+      return !!(c && c.owner && c.repo && c.token);
+    },
+    apiBase(){ const c = this.getConfig(); return `https://api.github.com/repos/${c.owner}/${c.repo}`; },
+    branch(){ const c = this.getConfig(); return (c && c.branch) || "main"; },
+    headers(){
+      const c = this.getConfig();
+      return { "Authorization": `Bearer ${c.token}`, "Accept": "application/vnd.github+json" };
+    },
+    encode(str){ return btoa(unescape(encodeURIComponent(str))); },
+    decode(b64){ return decodeURIComponent(escape(atob(b64.replace(/\n/g, "")))); },
+    async getFile(path){
+      const res = await fetch(`${this.apiBase()}/contents/${path}?ref=${encodeURIComponent(this.branch())}&_=${Date.now()}`, { headers: this.headers(), cache: "no-store" });
+      if (res.status === 404) return null;
+      if (!res.ok) throw new Error(`GitHub couldn't read ${path} (${res.status})`);
+      return res.json();
+    },
+    async putFile(path, contentStr, message, sha){
+      const body = { message, content: this.encode(contentStr), branch: this.branch() };
+      if (sha) body.sha = sha;
+      const res = await fetch(`${this.apiBase()}/contents/${path}`, {
+        method: "PUT",
+        headers: { ...this.headers(), "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok){
+        const t = await res.text().catch(()=> "");
+        throw new Error(`GitHub couldn't save ${path} (${res.status}): ${t.slice(0,200)}`);
+      }
+      return res.json();
+    },
+    async putBase64File(path, base64Content, message){
+      const res = await fetch(`${this.apiBase()}/contents/${path}`, {
+        method: "PUT",
+        headers: { ...this.headers(), "Content-Type": "application/json" },
+        body: JSON.stringify({ message, content: base64Content, branch: this.branch() })
+      });
+      if (!res.ok){
+        const t = await res.text().catch(()=> "");
+        throw new Error(`GitHub couldn't save ${path} (${res.status}): ${t.slice(0,200)}`);
+      }
+      return res.json();
+    }
+  };
 
-  /* ---------- progress ---------- */
-  .progress-top{ display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:16px; flex-wrap:wrap; gap:12px;}
-  .progress-pct{ font-family:'Space Grotesk'; font-size:38px; font-weight:700; color:var(--accent); }
-  .progress-track{ height:14px; border-radius:100px; background:var(--surface-2); overflow:hidden; border:1px solid var(--border); }
-  .progress-fill{ height:100%; border-radius:100px; background:linear-gradient(90deg,var(--accent),var(--accent-2)); transition:width .5s ease; }
-  .progress-stats{ display:flex; gap:24px; margin-top:20px; flex-wrap:wrap; }
-  .pstat{ display:flex; flex-direction:column; gap:2px; }
-  .pstat-label{ font-family:'IBM Plex Mono'; font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-dim); }
-  .pstat-value{ font-size:17px; font-weight:600; display:flex; align-items:center; gap:6px; }
-  .hours-input{ width:64px; text-align:center; border-radius:6px; padding:2px 4px; }
-
-  /* ---------- weekly logs ---------- */
-  .week-form{
-    display:none; flex-direction:column; gap:12px; border:1px dashed var(--accent); border-radius:12px; padding:18px; margin-bottom:20px;
-    background:var(--accent-soft);
-  }
-  .week-form.open{ display:flex; }
-  .week-form label{ font-family:'IBM Plex Mono'; font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-dim); margin-bottom:4px; display:block; }
-  .week-form input, .week-form textarea{
-    width:100%; padding:9px 11px; border-radius:8px; border:1px solid var(--border); background:var(--surface); font-size:14px;
-  }
-  .week-form textarea{ min-height:80px; }
-  .form-row{ display:flex; gap:14px; flex-wrap:wrap; }
-  .form-row > div{ flex:1; min-width:140px; }
-  .week-list{ display:flex; flex-direction:column; gap:14px; }
-  .week-card{ border:1px solid var(--border); border-radius:12px; padding:18px; position:relative; }
-  .week-tab{
-    display:inline-flex; align-items:center; gap:8px; font-family:'IBM Plex Mono'; font-size:11px;
-    color:var(--accent); font-weight:600; letter-spacing:.05em; margin-bottom:8px;
-  }
-  .week-tab .dot{ width:6px; height:6px; border-radius:50%; background:var(--accent); }
-  .week-dates{ color:var(--text-dim); font-size:12.5px; margin-left:auto; font-family:'IBM Plex Mono'; }
-  .week-title-row{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
-  .week-tasks{
-    font-size:14px; color:var(--text); white-space:pre-wrap; margin:8px 0 12px;
-    padding:10px 14px; border-left:2px solid var(--accent); background:var(--accent-soft); border-radius:0 8px 8px 0;
-  }
-  .week-takeaways{
-    font-size:13.5px; color:var(--text); white-space:pre-wrap; margin:0 0 12px;
-    padding:10px 14px; border-left:2px solid var(--accent-2); background:var(--accent-2-soft); border-radius:0 8px 8px 0;
-  }
-  .week-subhead{
-    font-family:'IBM Plex Mono'; font-size:10px; text-transform:uppercase; letter-spacing:.1em;
-    color:var(--accent-2); font-weight:600; margin-bottom:4px;
-  }
-  .week-tasks .week-subhead{ color:var(--accent); }
-  .week-images{ display:flex; gap:8px; flex-wrap:wrap; }
-  .week-images img{ width:76px; height:76px; object-fit:cover; border-radius:8px; border:1px solid var(--border); cursor:pointer; }
-  .week-actions{ display:flex; gap:8px; margin-top:12px; }
-  .empty-state{
-    text-align:center; padding:34px 20px; color:var(--text-dim); font-size:14px; border:1px dashed var(--border); border-radius:12px;
+  function updateGhStatus(){
+    const el = $("ghStatus");
+    const configured = GH.isConfigured();
+    if (configured){
+      const c = GH.getConfig();
+      el.textContent = `Connected · ${c.owner}/${c.repo}`;
+      el.classList.add("connected");
+    } else {
+      el.textContent = "Not connected";
+      el.classList.remove("connected");
+    }
   }
 
-  /* ---------- modal / lightbox ---------- */
-  .modal-overlay{
-    position:fixed; inset:0; background:rgba(10,14,16,.55); display:flex; align-items:center; justify-content:center;
-    z-index:100; padding:20px;
-  }
-  .modal-overlay.hidden{ display:none; }
-  .modal-box{
-    background:var(--surface); border-radius:16px; padding:26px; width:100%; max-width:360px; box-shadow:var(--shadow);
-    border:1px solid var(--border);
-  }
-  .modal-box.wide{ max-width:440px; }
-  .settings-label{ font-family:'IBM Plex Mono'; font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-dim); margin:14px 0 5px; display:block; }
-  .settings-help{ font-size:11.5px; color:var(--text-dim); margin-top:10px; line-height:1.6; }
-  .week-form{
-    display:none; flex-direction:column; gap:12px; border:1px dashed var(--accent); border-radius:12px; padding:18px; margin-bottom:20px;
-    background:var(--accent-soft);
-  }
-  .week-form.open{ display:flex; }
-  .week-form label{ font-family:'IBM Plex Mono'; font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--text-dim); margin-bottom:4px; display:block; }
-  .week-form input, .week-form textarea{
-    width:100%; padding:9px 11px; border-radius:8px; border:1px solid var(--border); background:var(--surface); font-size:14px; font-family:inherit; color:var(--text);
-  }
-  .week-form textarea{ min-height:80px; }
-  .form-row{ display:flex; gap:14px; flex-wrap:wrap; }
-  .form-row > div{ flex:1; min-width:140px; }
-  .week-actions{ display:flex; gap:8px; margin-top:12px; }
-  .btn.ghost-danger{ color:var(--danger); border-color:var(--danger-soft); }
-  .btn.ghost-danger:hover{ background:var(--danger-soft); }
-  .btn:disabled{ opacity:.5; cursor:not-allowed; }
-  .modal-box h3{ font-size:17px; margin-bottom:6px; }
-  .modal-box p{ font-size:13px; color:var(--text-dim); margin:0 0 16px; }
-  .modal-box input{ width:100%; padding:10px 12px; border-radius:8px; border:1px solid var(--border); background:var(--bg); font-size:14px; font-family:inherit; color:var(--text); margin-bottom:2px; }
-  .modal-actions{ display:flex; gap:10px; margin-top:16px; }
-  .modal-actions .btn{ flex:1; justify-content:center; }
-  .modal-error{ color:var(--danger); font-size:12px; margin-top:8px; min-height:14px; }
-  .modal-overlay img{ max-width:min(560px, 85vw); max-height:min(560px, 75vh); width:auto; height:auto; object-fit:contain; border-radius:10px; }
-  .close-x{ position:absolute; top:16px; right:20px; color:#fff; font-size:22px; background:none; border:none; }
+  $("settingsBtn").addEventListener("click", ()=>{
+    const c = GH.getConfig() || {};
+    $("ghOwner").value = c.owner || "";
+    $("ghRepo").value = c.repo || "";
+    $("ghBranch").value = c.branch || "main";
+    $("ghToken").value = c.token || "";
+    $("settingsError").textContent = "";
+    $("settingsModal").classList.remove("hidden");
+  });
+  $("settingsModal").addEventListener("click", (e)=>{ if (e.target.id === "settingsModal") $("settingsModal").classList.add("hidden"); });
+  $("settingsClearBtn").addEventListener("click", ()=>{
+    GH.clearConfig();
+    updateGhStatus();
+    renderWeeklyLogs(lastWeeklyLogs);
+    $("settingsModal").classList.add("hidden");
+    toast("Disconnected from GitHub.");
+  });
+  $("settingsSaveBtn").addEventListener("click", async ()=>{
+    const owner = $("ghOwner").value.trim();
+    const repo = $("ghRepo").value.trim();
+    const branch = $("ghBranch").value.trim() || "main";
+    const token = $("ghToken").value.trim();
+    if (!owner || !repo || !token){ $("settingsError").textContent = "Fill in owner, repo, and token."; return; }
+    $("settingsSaveBtn").disabled = true;
+    $("settingsSaveBtn").textContent = "Checking...";
+    GH.setConfig({ owner, repo, branch, token });
+    try{
+      await GH.getFile("data.json");
+      updateGhStatus();
+      renderWeeklyLogs(lastWeeklyLogs);
+      $("settingsModal").classList.add("hidden");
+      toast("Connected to GitHub.");
+    }catch(err){
+      $("settingsError").textContent = err.message || "Couldn't connect — check owner, repo, and token.";
+      GH.clearConfig();
+      updateGhStatus();
+    }finally{
+      $("settingsSaveBtn").disabled = false;
+      $("settingsSaveBtn").textContent = "Save & connect";
+    }
+  });
 
-  .doc-modal-box{
-    width:100%; max-width:820px; height:88vh; background:var(--surface); border-radius:14px;
-    border:1px solid var(--border); box-shadow:var(--shadow); display:flex; flex-direction:column; overflow:hidden;
-  }
-  .doc-modal-head{
-    display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px;
-    border-bottom:1px solid var(--border); font-weight:600; font-size:14px;
-  }
-  .doc-modal-actions{ display:flex; gap:8px; }
-  .doc-modal-box iframe{ flex:1; width:100%; border:none; background:#fff; }
+  const DOC_TYPES = [
+    { id:"moa", name:"Memorandum of Agreement", file:"documents/moa.pdf" },
+    { id:"loe", name:"Letter of Endorsement", file:"documents/loe.pdf" },
+    { id:"loi", name:"Letter of Intent", file:"documents/loi.pdf" },
+    { id:"ia",  name:"Internship Agreement", file:"documents/internship-agreement.pdf" },
+    { id:"waiver", name:"Student Waiver", file:"documents/waiver.pdf" },
+    { id:"consent", name:"Consent Form", file:"documents/consent.pdf" }
+  ];
 
-  .toast{
-    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); opacity:0;
-    background:var(--text); color:var(--bg); padding:10px 18px; border-radius:10px; font-size:13px;
-    transition:.25s; z-index:200; pointer-events:none; font-family:'IBM Plex Mono';
+  /* ---------------- theme (local, per-browser display preference only) ---------------- */
+  function initTheme(){
+    let saved = null;
+    try{ saved = window.localStorage.getItem("theme"); }catch(e){}
+    const theme = saved || "light";
+    document.documentElement.setAttribute("data-theme", theme);
+    $("themeToggle").textContent = theme === "dark" ? "☀️" : "🌙";
   }
-  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+  $("themeToggle").addEventListener("click", ()=>{
+    const cur = document.documentElement.getAttribute("data-theme");
+    const next = cur === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    $("themeToggle").textContent = next === "dark" ? "☀️" : "🌙";
+    try{ window.localStorage.setItem("theme", next); }catch(e){}
+  });
 
-  footer{ text-align:center; padding:30px 20px 50px; color:var(--text-dim); font-size:12px; font-family:'IBM Plex Mono'; }
-
-  @media (max-width:640px){
-    main{ padding:24px 14px 60px; }
-    .section{ padding:22px 18px; }
-    .badge{ flex-direction:column; text-align:center; }
-    .ledger{ justify-content:center; }
-    .profile-links{ justify-content:center; }
-    .company-head{ flex-direction:column; align-items:center; text-align:center; }
-    .route-strip{ justify-content:center; }
-    .doc-grid{ grid-template-columns:1fr; }
-    .progress-stats{ justify-content:space-between; gap:14px; }
-    .brand-sub{ display:none; }
-    .doc-modal-box{ width:100%; height:100%; max-width:none; border-radius:0; }
+  /* ---------------- image fallback loader ---------------- */
+  function loadImageWithFallback(imgEl, candidates, onFound, onFail){
+    let i = 0;
+    function tryNext(){
+      if (i >= candidates.length){ onFail(); return; }
+      imgEl.onerror = tryNext;
+      imgEl.onload = onFound;
+      imgEl.src = candidates[i++] + "?v=" + Date.now();
+    }
+    tryNext();
   }
+
+  function initAvatar(){
+    loadImageWithFallback(
+      $("avatarImg"),
+      ["images/profile.jpg","images/profile.jpeg","images/profile.png"],
+      ()=>{ $("avatarImg").style.display = "block"; $("avatarInitials").style.display = "none"; },
+      ()=>{ /* keep initials */ }
+    );
+  }
+  function initLogo(){
+    loadImageWithFallback(
+      $("logoImg"),
+      ["images/company-logo.png","images/company-logo.jpg","images/company-logo.jpeg"],
+      ()=>{ $("logoImg").style.display = "block"; $("logoPlaceholder").style.display = "none"; },
+      ()=>{ /* keep placeholder */ }
+    );
+  }
+
+  /* ---------------- documents: probe /documents for each file ---------------- */
+  async function fileExists(url){
+    try{
+      const res = await fetch(url + "?v=" + Date.now(), { method:"HEAD", cache:"no-store" });
+      return res.ok;
+    }catch(e){ return false; }
+  }
+  async function initDocuments(){
+    const grid = $("docGrid");
+    const results = await Promise.all(DOC_TYPES.map(d => fileExists(d.file)));
+    grid.innerHTML = DOC_TYPES.map((doc, i)=>{
+      const uploaded = results[i];
+      return `
+        <div class="doc-card">
+          <div class="doc-top">
+            <div class="doc-name">${doc.name}</div>
+            <div class="doc-status ${uploaded ? "on":"off"}">${uploaded ? "Uploaded" : "Not uploaded"}</div>
+          </div>
+          <div class="doc-meta">${uploaded ? doc.file : "documents/" + doc.file.split("/")[1]}</div>
+          <div class="doc-actions">
+            ${uploaded ? `<button class="btn small primary" data-action="view-doc" data-file="${doc.file}" data-name="${doc.name}">View</button>` : ""}
+          </div>
+        </div>`;
+    }).join("");
+  }
+  $("docGrid").addEventListener("click", (e)=>{
+    const btn = e.target.closest("button[data-action='view-doc']");
+    if (!btn) return;
+    openDocModal(btn.dataset.file, btn.dataset.name);
+  });
+  function openDocModal(file, name){
+    $("docModalTitle").textContent = name;
+    $("docModalFrame").src = file;
+    $("docModalOpenNew").href = file;
+    $("docModal").classList.remove("hidden");
+  }
+  function closeDocModal(){
+    $("docModal").classList.add("hidden");
+    $("docModalFrame").src = "about:blank";
+  }
+  $("docModalClose").addEventListener("click", closeDocModal);
+  $("docModal").addEventListener("click", (e)=>{ if (e.target.id === "docModal") closeDocModal(); });
+
+  /* ---------------- data.json: progress + weekly logs ---------------- */
+  function renderProgress(completed, target){
+    completed = Math.max(0, Number(completed) || 0);
+    target = Math.max(1, Number(target) || 1);
+    const pct = Math.min(100, Math.round((completed / target) * 100));
+    $("progressPct").textContent = pct + "%";
+    $("progressFill").style.width = pct + "%";
+    $("hoursCompleted").textContent = completed;
+    $("hoursTarget").textContent = target;
+    $("statCompleted").textContent = completed + " hrs";
+    $("statRemaining").textContent = Math.max(0, target - completed) + " hrs";
+    $("statTarget").textContent = target + " hrs";
+  }
+
+  function escapeHTML(str){
+    const d = document.createElement("div");
+    d.textContent = str == null ? "" : String(str);
+    return d.innerHTML;
+  }
+
+  let lastWeeklyLogs = [];
+
+  function renderWeeklyLogs(weeks){
+    lastWeeklyLogs = Array.isArray(weeks) ? weeks : [];
+    const list = lastWeeklyLogs.slice();
+    list.sort((a,b)=> (a.week||0) - (b.week||0));
+    $("weekEmpty").style.display = list.length ? "none" : "block";
+    const canEdit = GH.isConfigured();
+    $("weekList").innerHTML = list.map(w=>{
+      const imgs = Array.isArray(w.images) ? w.images.map((name,i)=>{
+        const src = "images/weekly/" + name;
+        return `<img src="${src}" data-src="${src}" alt="Week ${w.week} photo ${i+1}" onerror="this.style.display='none'">`;
+      }).join("") : "";
+      return `
+        <div class="week-card" data-week="${w.week}">
+          <div class="week-title-row">
+            <div class="week-tab"><span class="dot"></span>WEEK ${String(w.week||0).padStart(2,"0")}</div>
+            <div class="week-dates">${escapeHTML(w.dates||"")}</div>
+          </div>
+          <div class="week-tasks"><div class="week-subhead">Tasks</div>${escapeHTML(w.tasks||"")}</div>
+          ${w.takeaways ? `<div class="week-takeaways"><div class="week-subhead">Takeaways</div>${escapeHTML(w.takeaways)}</div>` : ""}
+          ${imgs ? `<div class="week-images">${imgs}</div>` : ""}
+          ${canEdit ? `<div class="week-actions">
+            <button class="btn small" data-action="edit-week" data-week="${w.week}">Edit</button>
+            <button class="btn small ghost-danger" data-action="delete-week" data-week="${w.week}">Delete</button>
+          </div>` : ""}
+        </div>`;
+    }).join("");
+  }
+
+  async function initDataJSON(){
+    try{
+      const res = await fetch("data.json?v=" + Date.now(), { cache:"no-store" });
+      if (!res.ok) throw new Error("data.json not found (" + res.status + ")");
+      const data = await res.json();
+      const progress = data.progress || {};
+      renderProgress(progress.completedHours, progress.targetHours != null ? progress.targetHours : 300);
+      renderWeeklyLogs(data.weeklyLogs || []);
+    }catch(err){
+      console.error("Couldn't load data.json:", err);
+      renderProgress(0, 300);
+      renderWeeklyLogs([]);
+      toast("Couldn't read data.json — showing defaults. Check the file for a JSON syntax error.");
+    }
+  }
+
+  /* ---------------- add / edit / delete week (commits to GitHub) ---------------- */
+  function nextWeekNumber(){
+    const nums = lastWeeklyLogs.map(w => w.week || 0);
+    return nums.length ? Math.max(...nums) + 1 : 1;
+  }
+  function openWeekForm(weekNumber){
+    if (!GH.isConfigured()){
+      toast("Connect GitHub first — tap ⚙️ in the top bar.");
+      $("settingsBtn").click();
+      return;
+    }
+    $("weekFormError").textContent = "";
+    $("weekImages").value = "";
+    if (weekNumber != null){
+      const w = lastWeeklyLogs.find(x => x.week === weekNumber);
+      $("weekEditId").value = weekNumber;
+      $("weekNumber").value = w ? w.week : weekNumber;
+      $("weekDates").value = w ? (w.dates || "") : "";
+      $("weekTasks").value = w ? (w.tasks || "") : "";
+      $("weekTakeaways").value = w ? (w.takeaways || "") : "";
+    } else {
+      $("weekEditId").value = "";
+      $("weekNumber").value = nextWeekNumber();
+      $("weekDates").value = "";
+      $("weekTasks").value = "";
+      $("weekTakeaways").value = "";
+    }
+    $("weekForm").classList.add("open");
+    $("weekForm").scrollIntoView({ behavior:"smooth", block:"center" });
+  }
+  $("addWeekBtn").addEventListener("click", ()=> openWeekForm(null));
+  $("weekCancelBtn").addEventListener("click", ()=> $("weekForm").classList.remove("open"));
+
+  $("weekList").addEventListener("click", (e)=>{
+    const btn = e.target.closest("button[data-action]");
+    if (!btn) return;
+    const weekNumber = parseInt(btn.dataset.week, 10);
+    if (btn.dataset.action === "edit-week") openWeekForm(weekNumber);
+    if (btn.dataset.action === "delete-week"){
+      if (confirm(`Delete week ${weekNumber}? This commits the removal to GitHub.`)) deleteWeek(weekNumber);
+    }
+  });
+
+  async function commitDataJSON(mutatorFn, message){
+    async function attempt(){
+      const file = await GH.getFile("data.json");
+      let data = file ? JSON.parse(GH.decode(file.content)) : { progress:{ completedHours:0, targetHours:300 }, weeklyLogs:[] };
+      if (!data.progress) data.progress = { completedHours:0, targetHours:300 };
+      if (!Array.isArray(data.weeklyLogs)) data.weeklyLogs = [];
+      mutatorFn(data);
+      data.weeklyLogs.sort((a,b)=> (a.week||0) - (b.week||0));
+      await GH.putFile("data.json", JSON.stringify(data, null, 2) + "\n", message, file ? file.sha : undefined);
+      return data;
+    }
+    let data;
+    try{
+      data = await attempt();
+    }catch(err){
+      // A 409 means the sha we sent is stale (e.g. a previous edit landed a moment
+      // ago). Re-fetch the latest version and re-apply the same change once more
+      // before giving up.
+      if (String(err.message).includes("(409)")){
+        data = await attempt();
+      } else {
+        throw err;
+      }
+    }
+    renderProgress(data.progress.completedHours, data.progress.targetHours);
+    renderWeeklyLogs(data.weeklyLogs);
+  }
+
+  function compressImage(file, maxDim, quality){
+    maxDim = maxDim || 1100; quality = quality || 0.72;
+    return new Promise((resolve, reject)=>{
+      const reader = new FileReader();
+      reader.onload = (e)=>{
+        const img = new Image();
+        img.onload = ()=>{
+          let w = img.width, h = img.height;
+          if (w > maxDim || h > maxDim){
+            if (w > h){ h = Math.round(h * maxDim / w); w = maxDim; }
+            else { w = Math.round(w * maxDim / h); h = maxDim; }
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = w; canvas.height = h;
+          canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL("image/jpeg", quality));
+        };
+        img.onerror = reject;
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  $("weekSaveBtn").addEventListener("click", async ()=>{
+    const weekNumber = parseInt($("weekNumber").value, 10);
+    const dates = $("weekDates").value.trim();
+    const tasks = $("weekTasks").value.trim();
+    const takeaways = $("weekTakeaways").value.trim();
+    const editRaw = $("weekEditId").value;
+    const originalNumber = editRaw === "" ? null : parseInt(editRaw, 10);
+    if (!weekNumber || weekNumber < 1){ $("weekFormError").textContent = "Enter a valid week number."; return; }
+    if (!tasks){ $("weekFormError").textContent = "Add a short description of your tasks."; return; }
+
+    $("weekSaveBtn").disabled = true;
+    $("weekFormError").textContent = "";
+    $("weekSaveBtn").textContent = "Uploading...";
+
+    try{
+      const existing = originalNumber != null ? lastWeeklyLogs.find(w => w.week === originalNumber) : null;
+      let images = (existing && Array.isArray(existing.images)) ? existing.images.slice() : [];
+
+      const files = Array.from($("weekImages").files || []).slice(0, 12);
+      for (let i = 0; i < files.length; i++){
+        const dataUrl = await compressImage(files[i], 1000, 0.7);
+        const base64 = dataUrl.split(",")[1];
+        const filename = `week${weekNumber}-${Date.now()}-${i}.jpg`;
+        await GH.putBase64File(`images/weekly/${filename}`, base64, `Add photo for week ${weekNumber}`);
+        images.push(filename);
+      }
+
+      $("weekSaveBtn").textContent = "Committing...";
+      const entry = { week: weekNumber, dates, tasks, takeaways, images };
+      await commitDataJSON((data)=>{
+        if (originalNumber != null){
+          data.weeklyLogs = data.weeklyLogs.filter(w => w.week !== originalNumber);
+        }
+        data.weeklyLogs = data.weeklyLogs.filter(w => w.week !== weekNumber);
+        data.weeklyLogs.push(entry);
+      }, originalNumber != null ? `Update week ${weekNumber}` : `Add week ${weekNumber}`);
+
+      $("weekForm").classList.remove("open");
+      toast(originalNumber != null ? "Week updated on GitHub." : "Week committed to GitHub.");
+    }catch(err){
+      console.error(err);
+      $("weekFormError").textContent = err.message || "Something went wrong committing to GitHub.";
+    }finally{
+      $("weekSaveBtn").disabled = false;
+      $("weekSaveBtn").textContent = "Commit to GitHub";
+    }
+  });
+
+  async function deleteWeek(weekNumber){
+    try{
+      await commitDataJSON((data)=>{
+        data.weeklyLogs = data.weeklyLogs.filter(w => w.week !== weekNumber);
+      }, `Delete week ${weekNumber}`);
+      toast("Week deleted on GitHub.");
+    }catch(err){
+      console.error(err);
+      toast("Couldn't delete — " + (err.message || "GitHub error."));
+    }
+  }
+
+  /* ---------------- lightbox ---------------- */
+  $("weekList") && document.addEventListener("click", (e)=>{
+    const img = e.target.closest("img[data-src]");
+    if (!img) return;
+    $("lightboxImg").src = img.dataset.src;
+    $("lightbox").classList.remove("hidden");
+  });
+  $("lightboxClose").addEventListener("click", ()=> $("lightbox").classList.add("hidden"));
+  $("lightbox").addEventListener("click", (e)=>{ if (e.target.id === "lightbox") $("lightbox").classList.add("hidden"); });
+
+  /* ---------------- boot ---------------- */
+  (async function boot(){
+    initTheme();
+    updateGhStatus();
+    initAvatar();
+    initLogo();
+    await initDocuments();
+    await initDataJSON();
+  })();
+
+})();
