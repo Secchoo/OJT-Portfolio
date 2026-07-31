@@ -86,7 +86,7 @@
     border-bottom:1px dashed transparent; width:100%;
     -webkit-appearance:none; appearance:none; -webkit-text-fill-color:var(--text);
   }
-  body.editing .field-input:not(:disabled){
+  .field-input:not(:disabled){
     border-bottom:1px dashed var(--accent); background:var(--accent-soft);
     border-radius:4px; padding:4px 8px;
   }
