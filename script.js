@@ -219,52 +219,14 @@
   $("docModal").addEventListener("click", (e)=>{ if (e.target.id === "docModal") closeDocModal(); });
 
   /* ---------------- data.json: progress + weekly logs ---------------- */
-  let lastProgress = { completedHours:0, targetHours:300 };
-
-  function animateFillTo(pct){
-    const fill = $("progressFill");
-    if (typeof requestAnimationFrame !== "function"){
-      fill.style.width = pct + "%";
-      return;
-    }
-    // Two nested rAFs guarantee the browser has actually painted the current
-    // width at least once before we change it — without this, a width change
-    // that happens synchronously on page load can get collapsed into the very
-    // first paint, and the CSS transition never visibly plays.
-    requestAnimationFrame(()=>{
-      requestAnimationFrame(()=>{
-        fill.style.width = pct + "%";
-      });
-    });
-  }
-
-  function animateCountUp(el, endValue, suffix){
-    if (typeof requestAnimationFrame !== "function" || typeof performance === "undefined"){
-      el.textContent = endValue + suffix;
-      return;
-    }
-    const start = parseInt(el.textContent, 10) || 0;
-    if (start === endValue){ el.textContent = endValue + suffix; return; }
-    const duration = 700;
-    const startTime = performance.now();
-    function tick(now){
-      const t = Math.min(1, (now - startTime) / duration);
-      const eased = 1 - Math.pow(1 - t, 3);
-      el.textContent = Math.round(start + (endValue - start) * eased) + suffix;
-      if (t < 1) requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-  }
-
   function renderProgress(completed, target){
     completed = Math.max(0, Number(completed) || 0);
     target = Math.max(1, Number(target) || 1);
-    lastProgress = { completedHours: completed, targetHours: target };
     const pct = Math.min(100, Math.round((completed / target) * 100));
-    animateCountUp($("progressPct"), pct, "%");
-    animateFillTo(pct);
-    $("hoursCompleted").value = completed;
-    $("hoursTarget").value = target;
+    $("progressPct").textContent = pct + "%";
+    $("progressFill").style.width = pct + "%";
+    $("hoursCompleted").textContent = completed;
+    $("hoursTarget").textContent = target;
     $("statCompleted").textContent = completed + " hrs";
     $("statRemaining").textContent = Math.max(0, target - completed) + " hrs";
     $("statTarget").textContent = target + " hrs";
@@ -276,65 +238,7 @@
     return d.innerHTML;
   }
 
-  /* ---------------- edit hours (commits to GitHub) ---------------- */
-  function setHoursEditing(on){
-    $("hoursCompleted").disabled = !on;
-    $("hoursTarget").disabled = !on;
-    $("editHoursBtn").style.display = on ? "none" : "";
-    $("hoursSaveBtn").style.display = on ? "" : "none";
-    $("hoursCancelBtn").style.display = on ? "" : "none";
-    $("hoursFormError").textContent = "";
-  }
-  $("editHoursBtn").addEventListener("click", ()=>{
-    if (!GH.isConfigured()){
-      toast("Connect GitHub first — tap ⚙️ in the top bar.");
-      $("settingsBtn").click();
-      return;
-    }
-    setHoursEditing(true);
-    $("hoursCompleted").focus();
-  });
-  $("hoursCancelBtn").addEventListener("click", ()=>{
-    renderProgress(lastProgress.completedHours, lastProgress.targetHours);
-    setHoursEditing(false);
-  });
-  $("hoursSaveBtn").addEventListener("click", async ()=>{
-    const completed = parseInt($("hoursCompleted").value, 10);
-    const target = parseInt($("hoursTarget").value, 10);
-    if (isNaN(completed) || completed < 0){ $("hoursFormError").textContent = "Enter a valid number of completed hours."; return; }
-    if (isNaN(target) || target < 1){ $("hoursFormError").textContent = "Enter a valid target (at least 1 hour)."; return; }
-
-    $("hoursSaveBtn").disabled = true;
-    $("hoursSaveBtn").textContent = "Committing...";
-    try{
-      await commitDataJSON((data)=>{
-        data.progress.completedHours = completed;
-        data.progress.targetHours = target;
-      }, `Update hours to ${completed}/${target}`);
-      setHoursEditing(false);
-      toast("Hours updated on GitHub.");
-    }catch(err){
-      console.error(err);
-      $("hoursFormError").textContent = err.message || "Something went wrong committing to GitHub.";
-    }finally{
-      $("hoursSaveBtn").disabled = false;
-      $("hoursSaveBtn").textContent = "Commit";
-    }
-  });
-
   let lastWeeklyLogs = [];
-
-  function attachImageRetry(img, attemptsLeft, delayMs){
-    img.addEventListener("error", function onErr(){
-      if (attemptsLeft > 0){
-        attemptsLeft--;
-        setTimeout(()=>{ img.src = img.dataset.src + "?retry=" + Date.now(); }, delayMs);
-      } else {
-        img.removeEventListener("error", onErr);
-        img.classList.add("img-unavailable");
-      }
-    });
-  }
 
   function renderWeeklyLogs(weeks){
     lastWeeklyLogs = Array.isArray(weeks) ? weeks : [];
@@ -345,7 +249,7 @@
     $("weekList").innerHTML = list.map(w=>{
       const imgs = Array.isArray(w.images) ? w.images.map((name,i)=>{
         const src = "images/weekly/" + name;
-        return `<img src="${src}" data-src="${src}" alt="Week ${w.week} photo ${i+1}">`;
+        return `<img src="${src}" data-src="${src}" alt="Week ${w.week} photo ${i+1}" onerror="this.style.display='none'">`;
       }).join("") : "";
       return `
         <div class="week-card" data-week="${w.week}">
@@ -362,10 +266,6 @@
           </div>` : ""}
         </div>`;
     }).join("");
-    // Right after committing a new photo, GitHub Pages can take a while to actually
-    // start serving it. Rather than silently giving up on the first failed load,
-    // retry a few times with a delay before treating it as genuinely missing.
-    $("weekList").querySelectorAll("img[data-src]").forEach(img => attachImageRetry(img, 6, 5000));
   }
 
   async function initDataJSON(){
@@ -378,12 +278,8 @@
       renderWeeklyLogs(data.weeklyLogs || []);
     }catch(err){
       console.error("Couldn't load data.json:", err);
-      try{
-        renderProgress(0, 300);
-        renderWeeklyLogs([]);
-      }catch(renderErr){
-        console.error("Also failed to render the fallback state:", renderErr);
-      }
+      renderProgress(0, 300);
+      renderWeeklyLogs([]);
       toast("Couldn't read data.json — showing defaults. Check the file for a JSON syntax error.");
     }
   }
