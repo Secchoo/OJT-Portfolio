@@ -1,0 +1,50 @@
+name: Auto-update OJT hours
+
+# Adds 8 hours to progress.completedHours in data.json every weekday.
+# Runs on GitHub's servers on a schedule — no browser or token from you needed
+# once this is set up, since it uses the automatic GITHUB_TOKEN.
+
+on:
+  schedule:
+    # 10:00 UTC = 6:00 PM Philippine Time (UTC+8), Monday–Friday only
+    - cron: "0 10 * * 1-5"
+  workflow_dispatch: {}   # lets you also trigger it manually from the Actions tab, for testing
+
+permissions:
+  contents: write
+
+jobs:
+  add-hours:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Add 8 hours to data.json
+        id: update
+        run: |
+          HOURS_TO_ADD=8
+          COMPLETED=$(jq '.progress.completedHours // 0' data.json)
+          TARGET=$(jq '.progress.targetHours // 300' data.json)
+          NEW=$(( COMPLETED + HOURS_TO_ADD ))
+          if [ "$NEW" -gt "$TARGET" ]; then
+            NEW=$TARGET
+          fi
+          if [ "$NEW" -eq "$COMPLETED" ]; then
+            echo "Already at target ($TARGET hrs) — nothing to add today."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            jq --argjson n "$NEW" '.progress.completedHours = $n' data.json > data.json.tmp
+            mv data.json.tmp data.json
+            echo "Updated completedHours: $COMPLETED -> $NEW (target: $TARGET)"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit and push
+        if: steps.update.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.json
+          git commit -m "Auto: +8 hours ($(date -u +'%A, %b %d'))"
+          git push
