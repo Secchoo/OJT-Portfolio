@@ -223,6 +223,10 @@
 
   function animateFillTo(pct){
     const fill = $("progressFill");
+    if (typeof requestAnimationFrame !== "function"){
+      fill.style.width = pct + "%";
+      return;
+    }
     // Two nested rAFs guarantee the browser has actually painted the current
     // width at least once before we change it — without this, a width change
     // that happens synchronously on page load can get collapsed into the very
@@ -235,6 +239,10 @@
   }
 
   function animateCountUp(el, endValue, suffix){
+    if (typeof requestAnimationFrame !== "function" || typeof performance === "undefined"){
+      el.textContent = endValue + suffix;
+      return;
+    }
     const start = parseInt(el.textContent, 10) || 0;
     if (start === endValue){ el.textContent = endValue + suffix; return; }
     const duration = 700;
@@ -370,8 +378,12 @@
       renderWeeklyLogs(data.weeklyLogs || []);
     }catch(err){
       console.error("Couldn't load data.json:", err);
-      renderProgress(0, 300);
-      renderWeeklyLogs([]);
+      try{
+        renderProgress(0, 300);
+        renderWeeklyLogs([]);
+      }catch(renderErr){
+        console.error("Also failed to render the fallback state:", renderErr);
+      }
       toast("Couldn't read data.json — showing defaults. Check the file for a JSON syntax error.");
     }
   }
