@@ -43,9 +43,15 @@
     {
       "week": 3,
       "dates": "Aug 3 - Aug 7, 2026",
-      "tasks": "What you worked on this week. Line breaks are fine.",
-      "takeaways": " ",
-      "images": []
+      "tasks": "-Deployment of secondary monitors to workstations\n-Did a checklist for the server room, speed test of ethernet and Wifi and documented it in a spreadsheet\n-Updated the assets status and location in the company OSP\n-Replaced system units in the training room and changed their hostname and joined them into the domain",
+      "takeaways": "From this week's tasks, I learned how to properly document network checks like speed tests and server room conditions, which helps keep records clear for future reference. I also learned how important it is to keep asset records updated, since wrong info can cause confusion later. Setting up the training room computers taught me how to rename systems and join them to a domain, which helped me understand how devices connect and get managed within a company network.",
+      "images": [
+        "week3-1786087294116-0.jpg",
+        "week3-1786087296203-1.jpg",
+        "week3-1786087298038-2.jpg",
+        "week3-1786087299890-3.jpg",
+        "week3-1786087301936-4.jpg"
+      ]
     },
     {
       "week": 4,
