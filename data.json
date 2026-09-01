@@ -68,9 +68,17 @@
     {
       "week": 5,
       "dates": "Aug 17 - Aug 21, 2026",
-      "tasks": "-Did a physical check of all the hardware within the work place\n-Updated the system firmware of computers to avoid future complications\n-Updated their status within the excel sheet",
-      "takeaways": "N/A",
-      "images": []
+      "tasks": "-Did a physical check of all the hardware within the work place\n-Updated the system firmware of computers to avoid future complications\n-Updated their status within the excel sheet\n-Deployed additional monitor for the client",
+      "takeaways": "From these tasks, I learned how important it is to regularly check hardware to make sure everything in the workplace is working properly. Updating the system firmware showed me how small maintenance tasks can prevent bigger technical problems down the line. Updating the status in the Excel sheet helped me see how keeping accurate records supports better tracking and management of company equipment. Lastly, deploying an additional monitor for the client gave me hands-on experience in setting up equipment and taught me the importance of meeting client needs efficiently and professionally.",
+      "images": [
+        "week5-1788225819685-0.jpg",
+        "week5-1788225821745-1.jpg",
+        "week5-1788225823595-2.jpg",
+        "week5-1788225825581-3.jpg",
+        "week5-1788225827570-4.jpg",
+        "week5-1788225829649-5.jpg",
+        "week5-1788225831377-6.jpg"
+      ]
     },
     {
       "week": 6,
