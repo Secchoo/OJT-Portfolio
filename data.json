@@ -83,9 +83,16 @@
     {
       "week": 6,
       "dates": "Aug 24 - Aug 28, 2026",
-      "tasks": "Ongoing",
-      "takeaways": "",
-      "images": []
+      "tasks": "-Used Microsoft Deployment Tool to reimage system units\n-Checked a system unit if it has hardware problems\n-Tested if ethernet cables are working\n-Did an inventory check if all assets are present in the production areas",
+      "takeaways": "From these tasks, I also picked up more from using the Microsoft Deployment Tool beyond just the basics, learning how reimaging fits into the bigger picture of keeping systems standardized and ready for use across the workplace. Checking a system unit for hardware problems helped me understand the basics of troubleshooting and how to spot issues before they affect daily operations. Testing the ethernet cables showed me the importance of making sure network connections are reliable, since even small cable issues can cause bigger connectivity problems. Lastly, doing an inventory check in the production areas helped me understand how companies make sure all their assets are accounted for, which highlighted the importance of accuracy and accountability in asset management.",
+      "images": [
+        "week6-1788747322316-0.jpg",
+        "week6-1788747324442-1.jpg",
+        "week6-1788747326419-2.jpg",
+        "week6-1788747328338-3.jpg",
+        "week6-1788747330092-4.jpg",
+        "week6-1788747331803-5.jpg"
+      ]
     }
   ]
 }
