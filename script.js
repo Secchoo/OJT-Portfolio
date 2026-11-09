@@ -127,7 +127,8 @@
     { id:"loi", name:"Letter of Intent", file:"documents/loi.pdf" },
     { id:"ia",  name:"Internship Agreement", file:"documents/internship-agreement.pdf" },
     { id:"waiver", name:"Student Waiver", file:"documents/waiver.pdf" },
-    { id:"consent", name:"Consent Form", file:"documents/consent.pdf" }
+    { id:"consent", name:"Consent Form", file:"documents/consent.pdf" },
+    { id:"coc", name:"Certificate of Completion", file:"documents/COC.pdf" }
   ];
 
   /* ---------------- theme (local, per-browser display preference only) ---------------- */
